@@ -41,7 +41,50 @@ const calculateRevenueService = async () => {
   return result;
 };
 
+//Get All Product
+const getAllOrderService = async () => {
+  // console.log(searchTerm);
+
+  const result = await Order.find();
+  return result;
+};
+
+//Get single Product
+const getSingleOrderService = async (id: string) => {
+  const result = await Order.findById(id);
+  if (!result) {
+    throw new Error(`Order with ID ${id} not found.`);
+  }
+  return result;
+};
+//delete Product
+const deleteSingleOrderService = async (id: string) => {
+  const result = await Order.findByIdAndDelete(id);
+  if (!result) {
+    throw new Error(`Order with ID ${id} not found.`);
+  }
+  return result;
+};
+// Update Product
+const updateSingleOrderService = async (
+  id: string,
+  payload: Partial<IOrder>,
+) => {
+  const result = await Order.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+  if (!result) {
+    throw new Error(`Order with ID ${id} not found.`);
+  }
+  return result;
+};
+
 export const orderService = {
   addOrderService,
   calculateRevenueService,
+  updateSingleOrderService,
+  deleteSingleOrderService,
+  getSingleOrderService,
+  getAllOrderService,
 };

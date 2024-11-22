@@ -17,6 +17,84 @@ const placeOrder = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+// All Order get controller
+const getAllOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await orderService.getAllOrderService();
+
+    res.json({
+      status: true,
+      message: 'Order retrieved successfully',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Single Order get controller
+const getSingleOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { productId } = req.params;
+
+    const result = await orderService.getSingleOrderService(productId);
+
+    res.json({
+      status: true,
+      message: 'Order retrieved successfully',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Single Order delete controller
+const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { productId } = req.params;
+
+    const result = await orderService.deleteSingleOrderService(productId);
+
+    res.json({
+      status: true,
+      message: 'Order deleted successfully',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Single order update controller
+const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { productId } = req.params;
+    const payload = req.body;
+
+    const result = await orderService.updateSingleOrderService(
+      productId,
+      payload,
+    );
+
+    res.json({
+      status: true,
+      message: 'Order updated successfully',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const orderController = {
   placeOrder,
+  getAllOrder,
+  getSingleOrder,
+  deleteOrder,
+  updateOrder,
 };

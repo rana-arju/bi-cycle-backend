@@ -28,11 +28,17 @@ const getAllProductService = async (searchTerm: string | undefined) => {
 //Get single Product
 const getSingleProductService = async (id: string) => {
   const result = await Product.findById(id);
+  if (!result) {
+    throw new Error(`Product with ID ${id} not found.`);
+  }
   return result;
 };
 //delete Product
 const deleteSingleProductService = async (id: string) => {
   const result = await Product.findByIdAndDelete(id);
+  if (!result) {
+    throw new Error(`Product with ID ${id} not found.`);
+  }
   return result;
 };
 // Update Product
@@ -44,6 +50,9 @@ const updateSingleProductService = async (
     new: true,
     runValidators: true,
   });
+  if (!result) {
+    throw new Error(`Product with ID ${id} not found.`);
+  }
   return result;
 };
 

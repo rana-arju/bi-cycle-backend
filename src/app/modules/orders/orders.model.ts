@@ -6,7 +6,7 @@ const orderSchema = new Schema<IOrder>(
   {
     email: {
       type: String,
-      required: [true, "Email is required."],
+      required: [true, 'Email is required.'],
       trim: true,
       match: [
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -20,7 +20,7 @@ const orderSchema = new Schema<IOrder>(
     },
     quantity: {
       type: Number,
-      required: [true, "Quantity is required!"],
+      required: [true, 'Quantity is required!'],
       min: [1, 'Quantity must be at least 1'],
     },
     totalPrice: {

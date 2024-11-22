@@ -7,5 +7,4 @@ export type IProduct = {
   quantity: number;
   inStock: boolean;
 };
-export type SearchTerm = 'name' | 'brand' | 'type';
 

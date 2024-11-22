@@ -56,6 +56,7 @@ const getSingleProduct = async (
     const { productId } = req.params;
 
     const result = await productService.getSingleProductService(productId);
+    
 
     res.json({
       status: true,
