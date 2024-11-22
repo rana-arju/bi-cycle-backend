@@ -1,4 +1,4 @@
-import { model, Schema, Types } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { IOrder } from './orders.interface';
 
 const orderSchema = new Schema<IOrder>({
@@ -26,6 +26,6 @@ const orderSchema = new Schema<IOrder>({
     required: true,
     min: [0, 'Total price must be at least 0'],
   },
-});
+},{ timestamps: true });
 
 export const Order = model<IOrder>('Order', orderSchema);

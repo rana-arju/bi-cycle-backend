@@ -8,10 +8,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# OS generated files
-.DS_Store
-Thumbs.db
-
 # Environment variables
 .env
 .env.local
@@ -40,16 +36,9 @@ coverage/
 *.out
 *.log
 
-# MongoDB data dumps
-dump/
 
-# Debugging files
-.nyc_output/
-.debug/
 
 # Local dependencies
 node_modules/
 
-# Miscellaneous
-*.sublime-workspace
-*.sublime-project
+
