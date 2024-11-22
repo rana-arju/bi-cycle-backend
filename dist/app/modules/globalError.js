@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ErrorHandler = void 0;
 // Generic error handler middleware
-const ErrorHandler = (err, req, res, next) => {
+const ErrorHandler = (err, req, res) => {
     // Determine the status code
     const statusCode = err.status || 500;
     // Build the error response

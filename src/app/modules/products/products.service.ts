@@ -1,4 +1,4 @@
-import { IProduct, SearchTerm } from './products.interface';
+import { IProduct } from './products.interface';
 import { Product } from './products.model';
 
 //add single product

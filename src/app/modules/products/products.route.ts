@@ -6,6 +6,6 @@ productRouter.get('/:productId', productController.getSingleProduct);
 productRouter.put('/:productId', productController.updateProduct);
 productRouter.delete('/:productId', productController.deleteProduct);
 productRouter.post('/', productController.addProduct);
-productRouter.get('/', productController.getAllProduct);
+//.get('/', productController.getAllProduct);
 
 export default productRouter;

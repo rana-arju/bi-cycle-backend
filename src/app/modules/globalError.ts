@@ -1,11 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 // Generic error handler middleware
 export const ErrorHandler = (
   err: any,
   req: Request,
   res: Response,
-  next: NextFunction,
 ) => {
   // Determine the status code
   const statusCode = err.status || 500;
