@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { productService } from './products.service';
 
-
 // Product add controller
 const addProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,12 +17,23 @@ const addProduct = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-
 // All Product get controller
-const getAllProduct = async (req: Request, res: Response, next: NextFunction) => {
+const getAllProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    
-    const result = await productService.getAllProductService();
+    const { searchTerm } = req.query;
+
+    if (searchTerm && typeof searchTerm !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid search term. It must be a string.',
+      });
+    }
+
+    const result = await productService.getAllProductService(searchTerm);
 
     res.json({
       status: true,
@@ -35,12 +45,15 @@ const getAllProduct = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-
 // Single Product get controller
-const getSingleProduct = async (req: Request, res: Response, next: NextFunction) => {
+const getSingleProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { productId } = req.params;
-    
+
     const result = await productService.getSingleProductService(productId);
 
     res.json({
@@ -54,10 +67,14 @@ const getSingleProduct = async (req: Request, res: Response, next: NextFunction)
 };
 
 // Single Product delete controller
-const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { productId } = req.params;
-    
+
     const result = await productService.deleteSingleProductService(productId);
 
     res.json({
@@ -71,12 +88,19 @@ const deleteProduct = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 // Single Product update controller
-const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
+const updateProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { productId } = req.params;
     const payload = req.body;
-    
-    const result = await productService.updateSingleProductService(productId, payload);
+
+    const result = await productService.updateSingleProductService(
+      productId,
+      payload,
+    );
 
     res.json({
       status: true,
@@ -88,12 +112,10 @@ const updateProduct = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-
-
 export const productController = {
   addProduct,
   getAllProduct,
   getSingleProduct,
   deleteProduct,
-  updateProduct
+  updateProduct,
 };

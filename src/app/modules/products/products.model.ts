@@ -16,7 +16,7 @@ const productSchema = new Schema<IProduct>(
     price: {
       type: Number,
       required: [true, 'The price of the bicycle is required.'],
-      min: [0, 'The price must be at least 0.'],
+      min: [0, 'Price must be a positive number.'],
     },
     type: {
       type: String,

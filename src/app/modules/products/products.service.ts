@@ -1,4 +1,4 @@
-import { IProduct } from './products.interface';
+import { IProduct, SearchTerm } from './products.interface';
 import { Product } from './products.model';
 
 //add single product
@@ -8,8 +8,20 @@ const addProductService = async (payload: IProduct): Promise<IProduct> => {
 };
 
 //Get All Product
-const getAllProductService = async () => {
-  const result = await Product.find();
+const getAllProductService = async (searchTerm: string | string[]| undefined) => {
+  // console.log(searchTerm);
+  let filter = {};
+  if (searchTerm) {
+    const searchRegex = new RegExp(searchTerm as string, 'i');
+    filter = {
+      $or: [
+        { name: searchRegex },
+        { brand: searchRegex },
+        { type: searchRegex },
+      ],
+    };
+  }
+  const result = await Product.find(filter);
   return result;
 };
 
@@ -24,8 +36,14 @@ const deleteSingleProductService = async (id: string) => {
   return result;
 };
 // Update Product
-const updateSingleProductService = async (id: string, payload: Partial<IProduct>) => {
-  const result = await Product.findByIdAndUpdate(id, payload);
+const updateSingleProductService = async (
+  id: string,
+  payload: Partial<IProduct>,
+) => {
+  const result = await Product.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
   return result;
 };
 
