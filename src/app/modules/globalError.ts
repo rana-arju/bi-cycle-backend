@@ -1,23 +1,62 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from 'express';
 
-// Error response structure
-function ErrorHandler(err: any) {
-  return {
-    message: err.message || 'An error occurred',
+// Generic error handler middleware
+export const ErrorHandler = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // Determine the status code
+  const statusCode = err.status || 500;
+
+  // Build the error response
+  const errorResponse = {
+    message: err.message || 'Validation failed',
     success: false,
-    error: err,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+    error: processError(err),
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined, // Only include stack in development
   };
-}
-const ErrorHandlerdf = (err: any, req: Request, res: Response) => {
-  const errStatus = err.statusCode || 500;
-  const errMsg = err.message || 'Something went wrong';
-  res.status(errStatus).json({
-    success: false,
-    status: errStatus,
-    message: errMsg,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : {},
-  });
+
+  // Send the response
+  res.status(statusCode).json(errorResponse);
 };
 
-export default ErrorHandler;
+// Helper function to process error details
+const processError = (err: any) => {
+  if (err.name === 'ValidationError') {
+    // Mongoose validation error
+    return {
+      name: err.name,
+      errors: Object.entries(err.errors).reduce(
+        (acc, [key, value]: [string, any]) => {
+          acc[key] = {
+            message: value.message,
+            name: value.name,
+            properties: value.properties,
+            kind: value.kind,
+            path: value.path,
+            value: value.value,
+          };
+          return acc;
+        },
+        {} as Record<string, any>,
+      ),
+    };
+  } else if (err.name === 'CastError') {
+    // Mongoose cast error
+    return {
+      name: err.name,
+      path: err.path,
+      value: err.value,
+      kind: err.kind,
+      reason: err.reason || 'Invalid data type',
+    };
+  }
+
+  // Generic error
+  return {
+    name: err.name || 'Error',
+    message: err.message || 'Something went wrong!',
+  };
+};
