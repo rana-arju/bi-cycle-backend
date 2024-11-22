@@ -22,15 +22,16 @@ const getAllProduct = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   try {
     const { searchTerm } = req.query;
 
     if (searchTerm && typeof searchTerm !== 'string') {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: 'Invalid search term. It must be a string.',
       });
+      return;
     }
 
     const result = await productService.getAllProductService(searchTerm);

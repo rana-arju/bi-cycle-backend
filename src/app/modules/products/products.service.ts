@@ -8,7 +8,7 @@ const addProductService = async (payload: IProduct): Promise<IProduct> => {
 };
 
 //Get All Product
-const getAllProductService = async (searchTerm: string | string[]| undefined) => {
+const getAllProductService = async (searchTerm: string | undefined) => {
   // console.log(searchTerm);
   let filter = {};
   if (searchTerm) {

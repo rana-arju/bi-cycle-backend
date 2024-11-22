@@ -15,9 +15,10 @@ app.use((0, cors_1.default)());
 // routers for products and orders
 app.use('/api/products', products_route_1.default);
 app.use('/api/orders', orders_route_1.default);
+// Global error handler
+app.use(globalError_1.ErrorHandler);
 // Define a simple route
 app.get('/', (req, res) => {
     res.send('Server running...');
 });
-app.use(globalError_1.ErrorHandler);
 exports.default = app;

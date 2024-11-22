@@ -7,5 +7,5 @@ productRouter.get('/:productId', products_controller_1.productController.getSing
 productRouter.put('/:productId', products_controller_1.productController.updateProduct);
 productRouter.delete('/:productId', products_controller_1.productController.deleteProduct);
 productRouter.post('/', products_controller_1.productController.addProduct);
-//.get('/', productController.getAllProduct);
+productRouter.get('/', products_controller_1.productController.getAllProduct);
 exports.default = productRouter;

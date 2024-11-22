@@ -31,10 +31,11 @@ const getAllProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     try {
         const { searchTerm } = req.query;
         if (searchTerm && typeof searchTerm !== 'string') {
-            return res.status(400).json({
+            res.status(400).json({
                 success: false,
                 message: 'Invalid search term. It must be a string.',
             });
+            return;
         }
         const result = yield products_service_1.productService.getAllProductService(searchTerm);
         res.json({

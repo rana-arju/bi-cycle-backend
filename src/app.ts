@@ -15,11 +15,13 @@ app.use(cors());
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
 
+// Global error handler
+app.use(ErrorHandler);
+
 
 // Define a simple route
 app.get('/', (req: Request, res: Response) => {
   res.send('Server running...');
 });
-app.use(ErrorHandler);
 
 export default app;

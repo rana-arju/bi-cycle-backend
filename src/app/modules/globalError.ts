@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 // Generic error handler middleware
 export const ErrorHandler = (
   err: any,
   req: Request,
   res: Response,
+  next: NextFunction
 ) => {
   // Determine the status code
   const statusCode = err.status || 500;
@@ -19,6 +20,7 @@ export const ErrorHandler = (
 
   // Send the response
   res.status(statusCode).json(errorResponse);
+  
 };
 
 // Helper function to process error details
