@@ -3,6 +3,7 @@ import { orderController } from './orders.controller';
 
 const orderRouter = Router();
 
+orderRouter.get('/revenue', orderController.totalRevenue);
 orderRouter.get('/:productId', orderController.getSingleOrder);
 orderRouter.put('/:productId', orderController.updateOrder);
 orderRouter.delete('/:productId', orderController.deleteOrder);

@@ -91,10 +91,31 @@ const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+// Total Revenua calculate
+
+const totalRevenue = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    
+    const result = await orderService.calculateRevenueService();
+
+    res.json({
+      status: true,
+      message: 'Revenue calculated successfully',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export const orderController = {
   placeOrder,
   getAllOrder,
   getSingleOrder,
   deleteOrder,
   updateOrder,
+  totalRevenue,
 };

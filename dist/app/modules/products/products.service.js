@@ -36,11 +36,17 @@ const getAllProductService = (searchTerm) => __awaiter(void 0, void 0, void 0, f
 //Get single Product
 const getSingleProductService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield products_model_1.Product.findById(id);
+    if (!result) {
+        throw new Error(`Product with ID ${id} not found.`);
+    }
     return result;
 });
 //delete Product
 const deleteSingleProductService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield products_model_1.Product.findByIdAndDelete(id);
+    if (!result) {
+        throw new Error(`Product with ID ${id} not found.`);
+    }
     return result;
 });
 // Update Product
@@ -49,6 +55,9 @@ const updateSingleProductService = (id, payload) => __awaiter(void 0, void 0, vo
         new: true,
         runValidators: true,
     });
+    if (!result) {
+        throw new Error(`Product with ID ${id} not found.`);
+    }
     return result;
 });
 exports.productService = {

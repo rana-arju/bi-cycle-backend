@@ -37,7 +37,14 @@ const addOrderService = async (payload: IOrder): Promise<IOrder> => {
 
 //Calculate Order revenue
 const calculateRevenueService = async () => {
-  const result = await Order.find();
+  const result = await Order.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: '$totalPrice' },
+      },
+    },
+  ]);
   return result;
 };
 
