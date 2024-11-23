@@ -5,7 +5,7 @@ import { Order } from './orders.model';
 //Place order
 
 const addOrderService = async (payload: IOrder): Promise<IOrder> => {
-  const { email, product, quantity } = payload;
+  const { email, product, quantity, totalPrice } = payload;
 
   // find existing Product
   const existingProduct = await Product.findById(product);
@@ -24,13 +24,16 @@ const addOrderService = async (payload: IOrder): Promise<IOrder> => {
   }
   await existingProduct.save();
 
-  const totalPrice = existingProduct.price * quantity;
+  // Use provided totalPrice if it exists, otherwise use calculated value
+  const calculatedTotalPrice = existingProduct.price * quantity;
+
+  const finalTotalPrice = totalPrice ?? calculatedTotalPrice;
 
   const result = await Order.create({
     email,
     product,
     quantity,
-    totalPrice,
+    totalPrice: finalTotalPrice,
   });
   return result;
 };
