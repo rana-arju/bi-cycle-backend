@@ -121,7 +121,7 @@ Start the server
 ```http
   POST /api/orders
 ```
-### Order Example
+### Order Example [totalPrice optional, functionality build for count totalPrice if totalPrice not provided]
 ```
 {
     "email": "rana23@example.com",
