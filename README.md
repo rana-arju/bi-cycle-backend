@@ -87,7 +87,19 @@ Start the server
 ```http
   POST /api/products/:productId
 ```
+## Product example: 
+```
+{
+  "name": "Roadster 5000",
+  "brand": "SpeedX",
+  "price": 300,
+  "type": "Road",
+  "description": "A premium road bike designed for speed and performance.",
+  "quantity": 20,
+  "inStock": true
+}
 
+```
 #### Get single product
 
 ```http
@@ -103,6 +115,21 @@ Start the server
 
 ```http
   PUT /api/products/:productId
+```
+#### Post a Order
+
+```http
+  POST /api/orders
+```
+### Order Example
+```
+{
+    "email": "rana23@example.com",
+    "product": "674057007c9f75443d09e463",
+    "quantity": 1,
+    "totalPrice": 950
+}
+
 ```
 #### Get all Order
 
