@@ -58,12 +58,12 @@ const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { productId } = req.params;
 
-    const result = await orderService.deleteSingleOrderService(productId);
+     await orderService.deleteSingleOrderService(productId);
 
     res.json({
       status: true,
       message: 'Order deleted successfully',
-      data: result,
+      data: {},
     });
   } catch (error) {
     next(error);

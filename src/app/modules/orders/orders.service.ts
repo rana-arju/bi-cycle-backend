@@ -1,3 +1,4 @@
+import NotFoundError from '../notFoundError';
 import { Product } from '../products/products.model';
 import { IOrder } from './orders.interface';
 import { Order } from './orders.model';
@@ -10,7 +11,7 @@ const addOrderService = async (payload: IOrder): Promise<IOrder> => {
   // find existing Product
   const existingProduct = await Product.findById(product);
   if (!existingProduct) {
-    throw new Error('Product not found');
+    throw new NotFoundError('Product not found');
   }
   if (existingProduct.quantity < quantity) {
     throw new Error(
@@ -63,7 +64,7 @@ const getAllOrderService = async () => {
 const getSingleOrderService = async (id: string) => {
   const result = await Order.findById(id);
   if (!result) {
-    throw new Error(`Order with ID ${id} not found.`);
+    throw new NotFoundError(`Order with ID ${id} not found.`);
   }
   return result;
 };
@@ -71,7 +72,8 @@ const getSingleOrderService = async (id: string) => {
 const deleteSingleOrderService = async (id: string) => {
   const result = await Order.findByIdAndDelete(id);
   if (!result) {
-    throw new Error(`Order with ID ${id} not found.`);
+    throw new NotFoundError(`Order with ID ${id} not found.`);
+   
   }
   return result;
 };
@@ -85,7 +87,7 @@ const updateSingleOrderService = async (
     runValidators: true,
   });
   if (!result) {
-    throw new Error(`Order with ID ${id} not found.`);
+    throw new NotFoundError(`Order with ID ${id} not found.`);
   }
   return result;
 };

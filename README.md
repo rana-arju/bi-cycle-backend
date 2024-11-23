@@ -3,17 +3,20 @@
 
 The system provides APIs for managing bicycles (products) and handling customer orders. It enables functionality such as product creation, order placement, stock management, revenue calculations, and search with filtering.
 
+## Developer
+
+- [@Rana Arju](https://github.com/rana-arju)
 
 ## Live API url
 <https://bi-cycle-backend.vercel.app>
 # or
 ```
 https://bi-cycle-backend.vercel.app
+
 ```
-## Developer
+## Video Explaination:
 
-- [@Rana Arju](https://github.com/rana-arju)
-
+[![BY-Cycle store](https://res.cloudinary.com/db8l1ulfq/image/upload/v1732376843/bi-cycle_l1wqwn.png)](https://youtu.be/UAo5M98yehk?si=JR22lwTtXNUUykbL)
 
 ## Tech Stack
 
@@ -171,7 +174,8 @@ Start the server
 │      ├── config
 │      │    └── index.ts
 │      └── modules
-|         ├──globalError.ts
+|         ├── globalError.ts
+|         ├── notFoundError.ts
 │         └── orders
 |         |    ├── orders.controller.ts
 |         |    ├── orders.model.ts

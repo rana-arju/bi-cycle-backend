@@ -59,11 +59,11 @@ const getSingleOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 const deleteOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { productId } = req.params;
-        const result = yield orders_service_1.orderService.deleteSingleOrderService(productId);
+        yield orders_service_1.orderService.deleteSingleOrderService(productId);
         res.json({
             status: true,
             message: 'Order deleted successfully',
-            data: result,
+            data: {},
         });
     }
     catch (error) {

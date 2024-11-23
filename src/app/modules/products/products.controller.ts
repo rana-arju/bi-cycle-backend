@@ -77,12 +77,12 @@ const deleteProduct = async (
   try {
     const { productId } = req.params;
 
-    const result = await productService.deleteSingleProductService(productId);
+     await productService.deleteSingleProductService(productId);
 
     res.json({
       status: true,
       message: 'Bicycle deleted successfully',
-      data: result,
+      data: {},
     });
   } catch (error) {
     next(error);

@@ -1,3 +1,4 @@
+import NotFoundError from '../notFoundError';
 import { IProduct } from './products.interface';
 import { Product } from './products.model';
 
@@ -29,7 +30,7 @@ const getAllProductService = async (searchTerm: string | undefined) => {
 const getSingleProductService = async (id: string) => {
   const result = await Product.findById(id);
   if (!result) {
-    throw new Error(`Product with ID ${id} not found.`);
+    throw new NotFoundError(`Product with ID ${id} not found.`);
   }
   return result;
 };
@@ -37,7 +38,7 @@ const getSingleProductService = async (id: string) => {
 const deleteSingleProductService = async (id: string) => {
   const result = await Product.findByIdAndDelete(id);
   if (!result) {
-    throw new Error(`Product with ID ${id} not found.`);
+    throw new NotFoundError(`Product with ID ${id} not found.`);
   }
   return result;
 };
@@ -51,7 +52,7 @@ const updateSingleProductService = async (
     runValidators: true,
   });
   if (!result) {
-    throw new Error(`Product with ID ${id} not found.`);
+    throw new NotFoundError(`Product with ID ${id} not found.`);
   }
   return result;
 };

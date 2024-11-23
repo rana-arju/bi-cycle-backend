@@ -14,7 +14,7 @@ const products_model_1 = require("../products/products.model");
 const orders_model_1 = require("./orders.model");
 //Place order
 const addOrderService = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, product, quantity } = payload;
+    const { email, product, quantity, totalPrice } = payload;
     // find existing Product
     const existingProduct = yield products_model_1.Product.findById(product);
     if (!existingProduct) {
@@ -28,12 +28,14 @@ const addOrderService = (payload) => __awaiter(void 0, void 0, void 0, function*
         existingProduct.inStock = false;
     }
     yield existingProduct.save();
-    const totalPrice = existingProduct.price * quantity;
+    // Use provided totalPrice if it exists, otherwise use calculated value
+    const calculatedTotalPrice = existingProduct.price * quantity;
+    const finalTotalPrice = totalPrice !== null && totalPrice !== void 0 ? totalPrice : calculatedTotalPrice;
     const result = yield orders_model_1.Order.create({
         email,
         product,
         quantity,
-        totalPrice,
+        totalPrice: finalTotalPrice,
     });
     return result;
 });

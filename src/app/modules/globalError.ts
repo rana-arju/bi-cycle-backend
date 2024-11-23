@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express';
 
 // Generic error handler middleware
@@ -61,3 +62,5 @@ const processError = (err: any) => {
     message: err.message || 'Something went wrong!',
   };
 };
+
+
