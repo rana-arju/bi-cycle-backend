@@ -48,6 +48,11 @@ const calculateRevenueService = async () => {
         totalRevenue: { $sum: '$totalPrice' },
       },
     },
+    {
+      $project: {
+        _id: 0, // Exclude _id
+      },
+    },
   ]);
   return result;
 };
@@ -56,13 +61,13 @@ const calculateRevenueService = async () => {
 const getAllOrderService = async () => {
   // console.log(searchTerm);
 
-  const result = await Order.find();
+  const result = await Order.find().select('-__v');
   return result;
 };
 
 //Get single Product
 const getSingleOrderService = async (id: string) => {
-  const result = await Order.findById(id);
+  const result = await Order.findById(id).select('-__v');
   if (!result) {
     throw new NotFoundError(`Order with ID ${id} not found.`);
   }
@@ -73,7 +78,6 @@ const deleteSingleOrderService = async (id: string) => {
   const result = await Order.findByIdAndDelete(id);
   if (!result) {
     throw new NotFoundError(`Order with ID ${id} not found.`);
-   
   }
   return result;
 };
@@ -85,7 +89,7 @@ const updateSingleOrderService = async (
   const result = await Order.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
-  });
+  }).select('-__v');
   if (!result) {
     throw new NotFoundError(`Order with ID ${id} not found.`);
   }

@@ -22,13 +22,13 @@ const getAllProductService = async (searchTerm: string | undefined) => {
       ],
     };
   }
-  const result = await Product.find(filter);
+  const result = await Product.find(filter).select('-__v');
   return result;
 };
 
 //Get single Product
 const getSingleProductService = async (id: string) => {
-  const result = await Product.findById(id);
+  const result = await Product.findById(id).select('-__v');
   if (!result) {
     throw new NotFoundError(`Product with ID ${id} not found.`);
   }
@@ -50,7 +50,7 @@ const updateSingleProductService = async (
   const result = await Product.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
-  });
+  }).select('-__v');
   if (!result) {
     throw new NotFoundError(`Product with ID ${id} not found.`);
   }

@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.orderService = void 0;
+const notFoundError_1 = __importDefault(require("../notFoundError"));
 const products_model_1 = require("../products/products.model");
 const orders_model_1 = require("./orders.model");
 //Place order
@@ -18,7 +22,7 @@ const addOrderService = (payload) => __awaiter(void 0, void 0, void 0, function*
     // find existing Product
     const existingProduct = yield products_model_1.Product.findById(product);
     if (!existingProduct) {
-        throw new Error('Product not found');
+        throw new notFoundError_1.default('Product not found');
     }
     if (existingProduct.quantity < quantity) {
         throw new Error(`Insufficient stock for product "${existingProduct.name}". Only ${existingProduct.quantity} items left.`);
@@ -48,20 +52,25 @@ const calculateRevenueService = () => __awaiter(void 0, void 0, void 0, function
                 totalRevenue: { $sum: '$totalPrice' },
             },
         },
+        {
+            $project: {
+                _id: 0, // Exclude _id
+            },
+        },
     ]);
     return result;
 });
 //Get All Product
 const getAllOrderService = () => __awaiter(void 0, void 0, void 0, function* () {
     // console.log(searchTerm);
-    const result = yield orders_model_1.Order.find();
+    const result = yield orders_model_1.Order.find().select('-__v');
     return result;
 });
 //Get single Product
 const getSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield orders_model_1.Order.findById(id);
+    const result = yield orders_model_1.Order.findById(id).select('-__v');
     if (!result) {
-        throw new Error(`Order with ID ${id} not found.`);
+        throw new notFoundError_1.default(`Order with ID ${id} not found.`);
     }
     return result;
 });
@@ -69,7 +78,7 @@ const getSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function
 const deleteSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield orders_model_1.Order.findByIdAndDelete(id);
     if (!result) {
-        throw new Error(`Order with ID ${id} not found.`);
+        throw new notFoundError_1.default(`Order with ID ${id} not found.`);
     }
     return result;
 });
@@ -78,9 +87,9 @@ const updateSingleOrderService = (id, payload) => __awaiter(void 0, void 0, void
     const result = yield orders_model_1.Order.findByIdAndUpdate(id, payload, {
         new: true,
         runValidators: true,
-    });
+    }).select('-__v');
     if (!result) {
-        throw new Error(`Order with ID ${id} not found.`);
+        throw new notFoundError_1.default(`Order with ID ${id} not found.`);
     }
     return result;
 });

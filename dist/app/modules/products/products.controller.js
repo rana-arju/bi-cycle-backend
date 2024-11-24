@@ -67,11 +67,11 @@ const getSingleProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, f
 const deleteProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { productId } = req.params;
-        const result = yield products_service_1.productService.deleteSingleProductService(productId);
+        yield products_service_1.productService.deleteSingleProductService(productId);
         res.json({
             status: true,
             message: 'Bicycle deleted successfully',
-            data: result,
+            data: {},
         });
     }
     catch (error) {
