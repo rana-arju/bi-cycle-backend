@@ -22,7 +22,8 @@
     "joi": "^17.13.3",
     "mongoose": "^8.8.2",
     "nodemon": "^3.1.7",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
