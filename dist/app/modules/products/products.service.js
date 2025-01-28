@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productService = void 0;
-const notFoundError_1 = __importDefault(require("../notFoundError"));
+const AppError_1 = __importDefault(require("../../error/AppError"));
 const products_model_1 = require("./products.model");
 //add single product
 const addProductService = (payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -41,7 +41,7 @@ const getAllProductService = (searchTerm) => __awaiter(void 0, void 0, void 0, f
 const getSingleProductService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield products_model_1.Product.findById(id).select('-__v');
     if (!result) {
-        throw new notFoundError_1.default(`Product with ID ${id} not found.`);
+        throw new AppError_1.default(404, `Product with ID ${id} not found.`);
     }
     return result;
 });
@@ -49,7 +49,7 @@ const getSingleProductService = (id) => __awaiter(void 0, void 0, void 0, functi
 const deleteSingleProductService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield products_model_1.Product.findByIdAndDelete(id);
     if (!result) {
-        throw new notFoundError_1.default(`Product with ID ${id} not found.`);
+        throw new AppError_1.default(404, `Product with ID ${id} not found.`);
     }
     return result;
 });
@@ -60,7 +60,7 @@ const updateSingleProductService = (id, payload) => __awaiter(void 0, void 0, vo
         runValidators: true,
     }).select('-__v');
     if (!result) {
-        throw new notFoundError_1.default(`Product with ID ${id} not found.`);
+        throw new AppError_1.default(404, `Product with ID ${id} not found.`);
     }
     return result;
 });

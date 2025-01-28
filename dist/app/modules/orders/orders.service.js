@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.orderService = void 0;
-const notFoundError_1 = __importDefault(require("../notFoundError"));
+const AppError_1 = __importDefault(require("../../error/AppError"));
 const products_model_1 = require("../products/products.model");
 const orders_model_1 = require("./orders.model");
 //Place order
@@ -22,7 +22,7 @@ const addOrderService = (payload) => __awaiter(void 0, void 0, void 0, function*
     // find existing Product
     const existingProduct = yield products_model_1.Product.findById(product);
     if (!existingProduct) {
-        throw new notFoundError_1.default('Product not found');
+        throw new AppError_1.default(404, 'Product not found');
     }
     if (existingProduct.quantity < quantity) {
         throw new Error(`Insufficient stock for product "${existingProduct.name}". Only ${existingProduct.quantity} items left.`);
@@ -70,7 +70,7 @@ const getAllOrderService = () => __awaiter(void 0, void 0, void 0, function* () 
 const getSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield orders_model_1.Order.findById(id).select('-__v');
     if (!result) {
-        throw new notFoundError_1.default(`Order with ID ${id} not found.`);
+        throw new AppError_1.default(404, `Order with ID ${id} not found.`);
     }
     return result;
 });
@@ -78,7 +78,7 @@ const getSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function
 const deleteSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield orders_model_1.Order.findByIdAndDelete(id);
     if (!result) {
-        throw new notFoundError_1.default(`Order with ID ${id} not found.`);
+        throw new AppError_1.default(404, `Order with ID ${id} not found.`);
     }
     return result;
 });
@@ -89,7 +89,7 @@ const updateSingleOrderService = (id, payload) => __awaiter(void 0, void 0, void
         runValidators: true,
     }).select('-__v');
     if (!result) {
-        throw new notFoundError_1.default(`Order with ID ${id} not found.`);
+        throw new AppError_1.default(404, `Order with ID ${id} not found.`);
     }
     return result;
 });
