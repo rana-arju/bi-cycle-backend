@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { productService } from './products.service';
+import sendResponse from '../../utils/sendResponse';
+import catchAsync from '../../utils/catchAsync';
 
 // Product add controller
 const addProduct = async (req: Request, res: Response, next: NextFunction) => {
@@ -18,33 +20,16 @@ const addProduct = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 // All Product get controller
-const getAllProduct = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
-    const { searchTerm } = req.query;
-
-    if (searchTerm && typeof searchTerm !== 'string') {
-      res.status(400).json({
-        success: false,
-        message: 'Invalid search term. It must be a string.',
-      });
-      return;
-    }
-
-    const result = await productService.getAllProductService(searchTerm);
-
-    res.json({
-      status: true,
-      message: 'Bicycles retrieved successfully',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+const getAllProduct = catchAsync(async (req, res) => {
+  const result = await productService.getAllProductService(req.query);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Bicycles retrieved successfully',
+    data: result?.result,
+    meta: result?.meta,
+  });
+});
 
 // Single Product get controller
 const getSingleProduct = async (
@@ -56,7 +41,6 @@ const getSingleProduct = async (
     const { productId } = req.params;
 
     const result = await productService.getSingleProductService(productId);
-    
 
     res.json({
       status: true,
@@ -77,7 +61,7 @@ const deleteProduct = async (
   try {
     const { productId } = req.params;
 
-     await productService.deleteSingleProductService(productId);
+    await productService.deleteSingleProductService(productId);
 
     res.json({
       status: true,

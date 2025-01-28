@@ -1,4 +1,6 @@
+import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../error/AppError';
+import { productSearchableField } from './product.constant';
 import { IProduct } from './products.interface';
 import { Product } from './products.model';
 
@@ -9,21 +11,17 @@ const addProductService = async (payload: IProduct): Promise<IProduct> => {
 };
 
 //Get All Product
-const getAllProductService = async (searchTerm: string | undefined) => {
-  // console.log(searchTerm);
-  let filter = {};
-  if (searchTerm) {
-    const searchRegex = new RegExp(searchTerm as string, 'i');
-    filter = {
-      $or: [
-        { name: searchRegex },
-        { brand: searchRegex },
-        { type: searchRegex },
-      ],
-    };
-  }
-  const result = await Product.find(filter).select('-__v');
-  return result;
+const getAllProductService = async (searchTerm: Record<string, unknown>) => {
+  const allProductQuery = new QueryBuilder(Product.find(), searchTerm)
+    .search(productSearchableField)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const result = await allProductQuery.modelQuery;
+  const meta = await allProductQuery.countTotal();
+
+  return { result, meta };
 };
 
 //Get single Product
