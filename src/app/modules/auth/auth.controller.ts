@@ -49,10 +49,7 @@ const registrationUser = catchAsync(async (req, res) => {
 });
 const getMe = catchAsync(async (req, res) => {
   const { userId } = req.user as JwtPayload;
-console.log(req.user);
-
   const result = await authServices.getMeFromDB(userId);
-console.log("result", result);
 
   sendResponse(res, {
     statusCode: 201,
@@ -61,8 +58,20 @@ console.log("result", result);
     data: result,
   });
 });
+// All Order get controller
+const getAllUsers = catchAsync(async (req, res) => {
+  const result = await authServices.getAllUsers();
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: 'Users get successfully',
+    success: true,
+    data: result,
+  });
+});
 export const authController = {
   loginUser,
   registrationUser,
   getMe,
+  getAllUsers,
 };

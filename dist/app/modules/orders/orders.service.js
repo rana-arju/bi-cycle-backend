@@ -97,6 +97,16 @@ const getAllOrderService = () => __awaiter(void 0, void 0, void 0, function* () 
     const result = yield orders_model_1.Order.find().select('-__v');
     return result;
 });
+//Get All Product
+const getMyOrderService = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield auth_model_1.User.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(404, 'User not found!');
+    }
+    const result = yield orders_model_1.Order.find({ user: user._id }).sort({ createdAt: -1 }).populate('user')
+        .populate('products.product');
+    return result;
+});
 //Get single Product
 const getSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield orders_model_1.Order.findById(id).select('-__v');
@@ -155,4 +165,5 @@ exports.orderService = {
     getSingleOrderService,
     getAllOrderService,
     verifyPayment,
+    getMyOrderService,
 };

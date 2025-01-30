@@ -112,6 +112,18 @@ const getAllOrderService = async () => {
   return result;
 };
 
+//Get All Product
+const getMyOrderService = async (userId: JwtPayload) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(404, 'User not found!');
+  }
+
+  const result = await Order.find({ user: user._id }).sort({ createdAt: -1 }).populate('user')
+    .populate('products.product');
+  return result;
+};
+
 //Get single Product
 const getSingleOrderService = async (id: string) => {
   const result = await Order.findById(id).select('-__v');
@@ -181,4 +193,5 @@ export const orderService = {
   getSingleOrderService,
   getAllOrderService,
   verifyPayment,
+  getMyOrderService,
 };

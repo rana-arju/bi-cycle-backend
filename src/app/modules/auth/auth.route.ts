@@ -17,6 +17,7 @@ router.post(
   authController.loginUser,
 );
 router.get('/me', auth(USER_ROLE.admin, USER_ROLE.user), authController.getMe);
+router.get('/users', auth(USER_ROLE.admin), authController.getAllUsers);
 
 
 

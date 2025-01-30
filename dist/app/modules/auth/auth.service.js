@@ -83,8 +83,14 @@ const getMeFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_model_1.User.findById(userId);
     return result;
 });
+//Get All Product
+const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_model_1.User.find().select('-__v');
+    return result;
+});
 exports.authServices = {
     loginUsertIntoDB,
     createUser,
     getMeFromDB,
+    getAllUsers,
 };

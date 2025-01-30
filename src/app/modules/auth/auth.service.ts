@@ -101,8 +101,14 @@ const getMeFromDB = async (userId: string) => {
 
   return result;
 };
+//Get All Product
+const getAllUsers = async () => {
+  const result = await User.find().select('-__v');
+  return result;
+};
 export const authServices = {
   loginUsertIntoDB,
   createUser,
   getMeFromDB,
+  getAllUsers,
 };

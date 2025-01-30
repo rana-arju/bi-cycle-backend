@@ -6,7 +6,7 @@ import { JwtPayload } from 'jsonwebtoken';
 
 // Place order controller
 const placeOrder = catchAsync(async (req, res) => {
-  const {userId} = req.user as JwtPayload;
+  const { userId } = req.user as JwtPayload;
 
   const result = await orderService.addOrderService(userId, req.body, req.ip!);
 
@@ -19,19 +19,29 @@ const placeOrder = catchAsync(async (req, res) => {
 });
 
 // All Order get controller
-const getAllOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const result = await orderService.getAllOrderService();
+const getAllOrder = catchAsync(async (req, res) => {
+  const result = await orderService.getAllOrderService();
 
-    res.json({
-      status: true,
-      message: 'Order retrieved successfully',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  sendResponse(res, {
+    statusCode: 200,
+    message: 'Order get successfully',
+    success: true,
+    data: result,
+  });
+});
+// All Order get controller
+const getMyOrder = catchAsync(async (req, res) => {
+  const {userId} = req.user as JwtPayload;
+  const result = await orderService.getMyOrderService(userId);
+  
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: 'Order retrieved successfully',
+    success: true,
+    data: result,
+  });
+});
 
 // Single Order get controller
 const getSingleOrder = async (
@@ -129,4 +139,5 @@ export const orderController = {
   updateOrder,
   totalRevenue,
   verifyPayment,
+  getMyOrder,
 };

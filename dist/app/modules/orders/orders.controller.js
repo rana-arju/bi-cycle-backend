@@ -28,19 +28,26 @@ const placeOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     });
 }));
 // All Order get controller
-const getAllOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield orders_service_1.orderService.getAllOrderService();
-        res.json({
-            status: true,
-            message: 'Order retrieved successfully',
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
+const getAllOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield orders_service_1.orderService.getAllOrderService();
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        message: 'Order get successfully',
+        success: true,
+        data: result,
+    });
+}));
+// All Order get controller
+const getMyOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.user;
+    const result = yield orders_service_1.orderService.getMyOrderService(userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        message: 'Order retrieved successfully',
+        success: true,
+        data: result,
+    });
+}));
 // Single Order get controller
 const getSingleOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -118,4 +125,5 @@ exports.orderController = {
     updateOrder,
     totalRevenue,
     verifyPayment,
+    getMyOrder,
 };

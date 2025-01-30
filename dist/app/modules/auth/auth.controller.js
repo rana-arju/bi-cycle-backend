@@ -55,9 +55,7 @@ const registrationUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 
 }));
 const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
-    console.log(req.user);
     const result = yield auth_service_1.authServices.getMeFromDB(userId);
-    console.log("result", result);
     (0, sendResponse_1.default)(res, {
         statusCode: 201,
         success: true,
@@ -65,8 +63,19 @@ const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
         data: result,
     });
 }));
+// All Order get controller
+const getAllUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_service_1.authServices.getAllUsers();
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        message: 'Users get successfully',
+        success: true,
+        data: result,
+    });
+}));
 exports.authController = {
     loginUser,
     registrationUser,
     getMe,
+    getAllUsers,
 };
