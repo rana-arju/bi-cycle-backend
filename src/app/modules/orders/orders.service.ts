@@ -1,42 +1,89 @@
+import { JwtPayload } from 'jsonwebtoken';
 import AppError from '../../error/AppError';
+import { IUser } from '../auth/auth.interface';
 import { Product } from '../products/products.model';
+import { orderUtils } from './order.utils';
 import { IOrder } from './orders.interface';
 import { Order } from './orders.model';
+import { User } from '../auth/auth.model';
 
 //Place order
 
-const addOrderService = async (payload: IOrder): Promise<IOrder> => {
-  const { email, product, quantity, totalPrice } = payload;
-
-  // find existing Product
-  const existingProduct = await Product.findById(product);
-  if (!existingProduct) {
-    throw new AppError(404, 'Product not found');
+const addOrderService = async (
+  userId: JwtPayload,
+  payload: {
+    products: { product: string; quantity: number }[];
+    totalPrice: number;
+    totalQuantity: number;
+    userInfo: IUser;
+  },
+  client_ip: string,
+): Promise<string> => {
+  if (!payload?.products?.length)
+    throw new AppError(406, 'Order is not specified');
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(404, 'User not found');
   }
-  if (existingProduct.quantity < quantity) {
-    throw new Error(
-      `Insufficient stock for product "${existingProduct.name}". Only ${existingProduct.quantity} items left.`,
-    );
-  }
-  existingProduct.quantity -= quantity;
+  const { address, city, phone } = payload.userInfo;
+  const updatedUser = await User.findByIdAndUpdate(
+    user._id,
+    {
+      address,
+      city,
+      phone,
+    },
+    { new: true },
+  );
 
-  if (existingProduct.quantity === 0) {
-    existingProduct.inStock = false;
-  }
-  await existingProduct.save();
+  const products = payload.products;
+  let totalPrice = 0;
+  const productDetails = await Promise.all(
+    products.map(async (item) => {
+      const product = await Product.findById(item.product);
 
-  // Use provided totalPrice if it exists, otherwise use calculated value
-  const calculatedTotalPrice = existingProduct.price * quantity;
-
-  const finalTotalPrice = totalPrice ?? calculatedTotalPrice;
-
-  const result = await Order.create({
-    email,
-    product,
-    quantity,
-    totalPrice: finalTotalPrice,
+      if (product) {
+        if (item?.quantity > product?.quantity) {
+          throw new Error(
+            `Insufficient stock for product "${product.name}". Only ${product.quantity} items left.`,
+          );
+        }
+        const subtotal = product ? (product.price || 0) * item.quantity : 0;
+        totalPrice += subtotal;
+        return item;
+      }
+    }),
+  );
+  let order = await Order.create({
+    user: user._id,
+    products: productDetails,
+    totalPrice,
   });
-  return result;
+
+  // payment integration
+  const shurjopayPayload = {
+    amount: totalPrice.toFixed(2),
+    order_id: order._id,
+    currency: 'BDT',
+    customer_name: updatedUser?.name,
+    customer_address: updatedUser?.address || address,
+    customer_email: updatedUser?.email,
+    customer_phone: updatedUser?.phone || phone,
+    customer_city: updatedUser?.city || city,
+    client_ip,
+  };
+  const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
+
+  if (payment?.transactionStatus) {
+    order = await order.updateOne({
+      transaction: {
+        id: payment.sp_order_id,
+        transactionStatus: payment.transactionStatus,
+      },
+    });
+  }
+
+  return payment.checkout_url;
 };
 
 //Calculate Order revenue
@@ -96,6 +143,36 @@ const updateSingleOrderService = async (
   return result;
 };
 
+const verifyPayment = async (order_id: string) => {
+  const verifiedPayment = await orderUtils.verifyPaymentAsync(order_id);
+
+  if (verifiedPayment.length) {
+    await Order.findOneAndUpdate(
+      {
+        'transaction.id': order_id,
+      },
+      {
+        'transaction.bank_status': verifiedPayment[0].bank_status,
+        'transaction.sp_code': verifiedPayment[0].sp_code,
+        'transaction.sp_message': verifiedPayment[0].sp_message,
+        'transaction.transactionStatus': verifiedPayment[0].transaction_status,
+        'transaction.method': verifiedPayment[0].method,
+        'transaction.date_time': verifiedPayment[0].date_time,
+        status:
+          verifiedPayment[0].bank_status == 'Success'
+            ? 'Paid'
+            : verifiedPayment[0].bank_status == 'Failed'
+              ? 'Pending'
+              : verifiedPayment[0].bank_status == 'Cancel'
+                ? 'Cancelled'
+                : '',
+      },
+    );
+  }
+
+  return verifiedPayment;
+};
+
 export const orderService = {
   addOrderService,
   calculateRevenueService,
@@ -103,4 +180,5 @@ export const orderService = {
   deleteSingleOrderService,
   getSingleOrderService,
   getAllOrderService,
+  verifyPayment,
 };

@@ -51,7 +51,7 @@ const loginUsertIntoDB = async (payload: IUser) => {
   // user exists or not found
 
   //const user = await User.findOne({ id: payload?.id }).select('+password');
-  const user = await User.findOne({ email: payload.email }).select("+password");
+  const user = await User.findOne({ email: payload.email }).select('+password');
 
   if (!user) {
     throw new AppError(404, 'User not found');
@@ -96,8 +96,13 @@ const loginUsertIntoDB = async (payload: IUser) => {
     refreshToken,
   };
 };
+const getMeFromDB = async (userId: string) => {
+  const result = await User.findById(userId);
 
+  return result;
+};
 export const authServices = {
   loginUsertIntoDB,
   createUser,
+  getMeFromDB,
 };

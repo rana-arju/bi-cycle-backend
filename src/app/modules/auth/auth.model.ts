@@ -22,6 +22,16 @@ const userSchema = new Schema<IUser, UserModel>(
       required: [true, 'Password is required'],
       select: 0,
     },
+    address: {
+      type: String,
+    },  
+    city: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+
     status: {
       type: String,
       enum: ['in-progress', 'blocked'],

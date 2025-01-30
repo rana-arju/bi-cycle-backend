@@ -8,24 +8,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.orderController = void 0;
 const orders_service_1 = require("./orders.service");
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 // Place order controller
-const placeOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const payload = req.body;
-        const result = yield orders_service_1.orderService.addOrderService(payload);
-        res.json({
-            status: true,
-            message: 'Order created successfully',
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
+const placeOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.user;
+    const result = yield orders_service_1.orderService.addOrderService(userId, req.body, req.ip);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        message: 'Order placed successfully',
+        success: true,
+        data: result,
+    });
+}));
 // All Order get controller
 const getAllOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -100,6 +101,15 @@ const totalRevenue = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(error);
     }
 });
+const verifyPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const order = yield orders_service_1.orderService.verifyPayment(req.query.order_id);
+    (0, sendResponse_1.default)(res, {
+        message: 'Order verified successfully',
+        data: order,
+        statusCode: 200,
+        success: true,
+    });
+}));
 exports.orderController = {
     placeOrder,
     getAllOrder,
@@ -107,4 +117,5 @@ exports.orderController = {
     deleteOrder,
     updateOrder,
     totalRevenue,
+    verifyPayment,
 };

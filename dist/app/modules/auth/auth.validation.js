@@ -27,6 +27,9 @@ const registrationSchemaValidation = zod_1.z.object({
         name: zod_1.z.string({
             required_error: 'Password is required',
         }),
+        address: zod_1.z.string().optional(),
+        city: zod_1.z.string().optional(),
+        phone: zod_1.z.string().optional(),
     }),
 });
 const changePasswordSchemaValidation = zod_1.z.object({

@@ -13,7 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productService = void 0;
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const AppError_1 = __importDefault(require("../../error/AppError"));
+const product_constant_1 = require("./product.constant");
 const products_model_1 = require("./products.model");
 //add single product
 const addProductService = (payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -22,20 +24,15 @@ const addProductService = (payload) => __awaiter(void 0, void 0, void 0, functio
 });
 //Get All Product
 const getAllProductService = (searchTerm) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log(searchTerm);
-    let filter = {};
-    if (searchTerm) {
-        const searchRegex = new RegExp(searchTerm, 'i');
-        filter = {
-            $or: [
-                { name: searchRegex },
-                { brand: searchRegex },
-                { type: searchRegex },
-            ],
-        };
-    }
-    const result = yield products_model_1.Product.find(filter).select('-__v');
-    return result;
+    const allProductQuery = new QueryBuilder_1.default(products_model_1.Product.find(), searchTerm)
+        .search(product_constant_1.productSearchableField)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const result = yield allProductQuery.modelQuery;
+    const meta = yield allProductQuery.countTotal();
+    return { result, meta };
 });
 //Get single Product
 const getSingleProductService = (id) => __awaiter(void 0, void 0, void 0, function* () {

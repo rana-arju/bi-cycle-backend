@@ -3,30 +3,44 @@ import { IOrder } from './orders.interface';
 
 const orderSchema = new Schema<IOrder>(
   {
-    email: {
-      type: String,
-      required: [true, 'Email is required.'],
-      trim: true,
-      match: [
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        'Please enter a valid email address',
-      ],
-    },
-    product: {
+    user: {
       type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
-      ref: 'Product',
     },
-    quantity: {
-      type: Number,
-      required: [true, 'Quantity is required!'],
-      min: [1, 'Quantity must be at least 1'],
-    },
+    products: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: 'Product',
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
     totalPrice: {
       type: Number,
-      min: [0, 'Total price must be at least 0'],
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ['Pending', 'Paid', 'Shipped', 'Completed', 'Cancelled'],
+      default: 'Pending',
+    },
+    transaction: {
+      id: String,
+      transactionStatus: String,
+      bank_status: String,
+      sp_code: String,
+      sp_message: String,
+      method: String,
+      date_time: String,
     },
   },
+
   { timestamps: true },
 );
 

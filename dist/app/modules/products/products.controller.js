@@ -8,9 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productController = void 0;
 const products_service_1 = require("./products.service");
+const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 // Product add controller
 const addProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -27,27 +32,16 @@ const addProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 // All Product get controller
-const getAllProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { searchTerm } = req.query;
-        if (searchTerm && typeof searchTerm !== 'string') {
-            res.status(400).json({
-                success: false,
-                message: 'Invalid search term. It must be a string.',
-            });
-            return;
-        }
-        const result = yield products_service_1.productService.getAllProductService(searchTerm);
-        res.json({
-            status: true,
-            message: 'Bicycles retrieved successfully',
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
+const getAllProduct = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield products_service_1.productService.getAllProductService(req.query);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Bicycles retrieved successfully',
+        data: result === null || result === void 0 ? void 0 : result.result,
+        meta: result === null || result === void 0 ? void 0 : result.meta,
+    });
+}));
 // Single Product get controller
 const getSingleProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {

@@ -2,6 +2,8 @@ import express from 'express';
 import { authController } from './auth.controller';
 import validationRequest from '../../middleware/validationRequest';
 import { authValidation } from './auth.validation';
+import auth from '../../middleware/auth';
+import { USER_ROLE } from './auth.interface';
 
 const router = express.Router();
 router.post(
@@ -14,4 +16,8 @@ router.post(
   validationRequest(authValidation.loginSchemaValidation),
   authController.loginUser,
 );
-export const authRoutes = router
+router.get('/me', auth(USER_ROLE.admin, USER_ROLE.user), authController.getMe);
+
+
+
+export const authRoutes = router;

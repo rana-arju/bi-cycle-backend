@@ -49,7 +49,7 @@ const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
 const loginUsertIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // user exists or not found
     //const user = await User.findOne({ id: payload?.id }).select('+password');
-    const user = yield auth_model_1.User.findOne({ email: payload.email }).select("+password");
+    const user = yield auth_model_1.User.findOne({ email: payload.email }).select('+password');
     if (!user) {
         throw new AppError_1.default(404, 'User not found');
     }
@@ -79,7 +79,12 @@ const loginUsertIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function
         refreshToken,
     };
 });
+const getMeFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_model_1.User.findById(userId);
+    return result;
+});
 exports.authServices = {
     loginUsertIntoDB,
     createUser,
+    getMeFromDB,
 };

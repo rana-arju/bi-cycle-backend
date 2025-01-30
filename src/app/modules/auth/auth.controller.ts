@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
@@ -46,7 +47,22 @@ const registrationUser = catchAsync(async (req, res) => {
     },
   });
 });
+const getMe = catchAsync(async (req, res) => {
+  const { userId } = req.user as JwtPayload;
+console.log(req.user);
+
+  const result = await authServices.getMeFromDB(userId);
+console.log("result", result);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: 'get me succesfully',
+    data: result,
+  });
+});
 export const authController = {
   loginUser,
   registrationUser,
+  getMe,
 };

@@ -53,7 +53,20 @@ const registrationUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 
         },
     });
 }));
+const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.user;
+    console.log(req.user);
+    const result = yield auth_service_1.authServices.getMeFromDB(userId);
+    console.log("result", result);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: 'get me succesfully',
+        data: result,
+    });
+}));
 exports.authController = {
     loginUser,
     registrationUser,
+    getMe,
 };

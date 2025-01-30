@@ -3,9 +3,10 @@ export const createToken = (
   jwtPayload: JwtPayload,
   token: string,
   expiresIn: string,
-): string => {
-  return jwt.sign(jwtPayload, token,{ expiresIn});
-  
+) => {
+  return jwt.sign(jwtPayload, token, {
+    expiresIn: expiresIn,
+  });
 };
 
 export const verifyToken = (token: string, secret: string) => {

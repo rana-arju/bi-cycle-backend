@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const config_1 = __importDefault(require("../config"));
 const AppError_1 = __importDefault(require("../error/AppError"));
 const auth_model_1 = require("../modules/auth/auth.model");

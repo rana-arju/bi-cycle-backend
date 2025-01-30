@@ -1,21 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
 import { orderService } from './orders.service';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import { JwtPayload } from 'jsonwebtoken';
 
 // Place order controller
-const placeOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const payload = req.body;
-    const result = await orderService.addOrderService(payload);
+const placeOrder = catchAsync(async (req, res) => {
+  const {userId} = req.user as JwtPayload;
 
-    res.json({
-      status: true,
-      message: 'Order created successfully',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  const result = await orderService.addOrderService(userId, req.body, req.ip!);
+
+  sendResponse(res, {
+    statusCode: 201,
+    message: 'Order placed successfully',
+    success: true,
+    data: result,
+  });
+});
 
 // All Order get controller
 const getAllOrder = async (req: Request, res: Response, next: NextFunction) => {
@@ -58,7 +59,7 @@ const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { productId } = req.params;
 
-     await orderService.deleteSingleOrderService(productId);
+    await orderService.deleteSingleOrderService(productId);
 
     res.json({
       status: true,
@@ -99,7 +100,6 @@ const totalRevenue = async (
   next: NextFunction,
 ) => {
   try {
-    
     const result = await orderService.calculateRevenueService();
 
     res.json({
@@ -111,6 +111,16 @@ const totalRevenue = async (
     next(error);
   }
 };
+const verifyPayment = catchAsync(async (req, res) => {
+  const order = await orderService.verifyPayment(req.query.order_id as string);
+
+  sendResponse(res, {
+    message: 'Order verified successfully',
+    data: order,
+    statusCode: 200,
+    success: true,
+  });
+});
 export const orderController = {
   placeOrder,
   getAllOrder,
@@ -118,4 +128,5 @@ export const orderController = {
   deleteOrder,
   updateOrder,
   totalRevenue,
+  verifyPayment,
 };
