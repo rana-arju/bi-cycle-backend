@@ -53,25 +53,17 @@ const getSingleProduct = async (
 };
 
 // Single Product delete controller
-const deleteProduct = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { productId } = req.params;
+const deleteProduct = catchAsync(async (req, res) => {
+  const { productId } = req.params;
 
-    await productService.deleteSingleProductService(productId);
-
-    res.json({
-      status: true,
-      message: 'Bicycle deleted successfully',
-      data: {},
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+ const result = await productService.deleteSingleProductService(productId);
+  sendResponse(res, {
+    statusCode: 200,
+    message: 'Bicycle deleted successfully',
+    success: true,
+    data: result,
+  });
+});
 
 // Single Product update controller
 const updateProduct = async (

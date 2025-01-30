@@ -34,10 +34,11 @@ const getSingleProductService = async (id: string) => {
 };
 //delete Product
 const deleteSingleProductService = async (id: string) => {
-  const result = await Product.findByIdAndDelete(id);
-  if (!result) {
+  const product = await Product.findById(id);
+  if (!product) {
     throw new AppError(404, `Product with ID ${id} not found.`);
   }
+  const result = await Product.findByIdAndDelete(id);
   return result;
 };
 // Update Product

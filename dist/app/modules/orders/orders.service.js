@@ -94,7 +94,10 @@ const calculateRevenueService = () => __awaiter(void 0, void 0, void 0, function
 //Get All Product
 const getAllOrderService = () => __awaiter(void 0, void 0, void 0, function* () {
     // console.log(searchTerm);
-    const result = yield orders_model_1.Order.find().select('-__v');
+    const result = yield orders_model_1.Order.find()
+        .sort({ createdAt: -1 })
+        .populate('user')
+        .populate('products.product');
     return result;
 });
 //Get All Product

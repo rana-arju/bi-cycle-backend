@@ -69,9 +69,21 @@ const getAllUsers = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const deleteByAdmin = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await authServices.deleteUserFromDB(id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User is deleted succesfully',
+    data: result,
+  });
+});
 export const authController = {
   loginUser,
   registrationUser,
   getMe,
   getAllUsers,
+  deleteByAdmin,
 };

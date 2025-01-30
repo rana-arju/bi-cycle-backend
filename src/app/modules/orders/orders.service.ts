@@ -108,7 +108,10 @@ const calculateRevenueService = async () => {
 const getAllOrderService = async () => {
   // console.log(searchTerm);
 
-  const result = await Order.find().select('-__v');
+  const result = await Order.find()
+    .sort({ createdAt: -1 })
+    .populate('user')
+    .populate('products.product');
   return result;
 };
 

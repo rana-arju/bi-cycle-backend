@@ -13,6 +13,7 @@ const auth_interface_1 = require("./auth.interface");
 const router = express_1.default.Router();
 router.post('/registration', (0, validationRequest_1.default)(auth_validation_1.authValidation.registrationSchemaValidation), auth_controller_1.authController.registrationUser);
 router.post('/login', (0, validationRequest_1.default)(auth_validation_1.authValidation.loginSchemaValidation), auth_controller_1.authController.loginUser);
+router.delete('/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.deleteByAdmin);
 router.get('/me', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin, auth_interface_1.USER_ROLE.user), auth_controller_1.authController.getMe);
 router.get('/users', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.getAllUsers);
 exports.authRoutes = router;

@@ -16,9 +16,8 @@ router.post(
   validationRequest(authValidation.loginSchemaValidation),
   authController.loginUser,
 );
+router.delete('/:id', auth(USER_ROLE.admin), authController.deleteByAdmin);
 router.get('/me', auth(USER_ROLE.admin, USER_ROLE.user), authController.getMe);
 router.get('/users', auth(USER_ROLE.admin), authController.getAllUsers);
-
-
 
 export const authRoutes = router;

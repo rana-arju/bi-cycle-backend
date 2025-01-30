@@ -58,20 +58,16 @@ const getSingleProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, f
     }
 });
 // Single Product delete controller
-const deleteProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { productId } = req.params;
-        yield products_service_1.productService.deleteSingleProductService(productId);
-        res.json({
-            status: true,
-            message: 'Bicycle deleted successfully',
-            data: {},
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
+const deleteProduct = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { productId } = req.params;
+    const result = yield products_service_1.productService.deleteSingleProductService(productId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        message: 'Bicycle deleted successfully',
+        success: true,
+        data: result,
+    });
+}));
 // Single Product update controller
 const updateProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {

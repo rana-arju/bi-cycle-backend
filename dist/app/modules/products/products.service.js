@@ -44,10 +44,11 @@ const getSingleProductService = (id) => __awaiter(void 0, void 0, void 0, functi
 });
 //delete Product
 const deleteSingleProductService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield products_model_1.Product.findByIdAndDelete(id);
-    if (!result) {
+    const product = yield products_model_1.Product.findById(id);
+    if (!product) {
         throw new AppError_1.default(404, `Product with ID ${id} not found.`);
     }
+    const result = yield products_model_1.Product.findByIdAndDelete(id);
     return result;
 });
 // Update Product

@@ -101,6 +101,29 @@ const getMeFromDB = async (userId: string) => {
 
   return result;
 };
+const deleteUserFromDB = async (id: string) => {
+  const user = await User.findById(id);
+  if (!user) {
+    throw new AppError(404, 'User not found!');
+  }
+  const result = await User.findByIdAndDelete(user._id);
+  return result;
+};
+const userRoleUpdate = async (id: string, role: string) => {
+  const user = await User.findById(id);
+  if (!user) {
+    throw new AppError(404, 'User not found!');
+  }
+  if (user.role === role) {
+    throw new AppError(400, `This user already ${user.role}`);
+  }
+  const result = await User.findByIdAndUpdate(
+    user._id,
+    { role },
+    { new: true },
+  );
+  return result;
+};
 //Get All Product
 const getAllUsers = async () => {
   const result = await User.find().select('-__v');
@@ -111,4 +134,6 @@ export const authServices = {
   createUser,
   getMeFromDB,
   getAllUsers,
+  deleteUserFromDB,
+  userRoleUpdate,
 };

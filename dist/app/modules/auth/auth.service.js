@@ -83,6 +83,25 @@ const getMeFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_model_1.User.findById(userId);
     return result;
 });
+const deleteUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield auth_model_1.User.findById(id);
+    if (!user) {
+        throw new AppError_1.default(404, 'User not found!');
+    }
+    const result = yield auth_model_1.User.findByIdAndDelete(user._id);
+    return result;
+});
+const userRoleUpdate = (id, role) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield auth_model_1.User.findById(id);
+    if (!user) {
+        throw new AppError_1.default(404, 'User not found!');
+    }
+    if (user.role === role) {
+        throw new AppError_1.default(400, `This user already ${user.role}`);
+    }
+    const result = yield auth_model_1.User.findByIdAndUpdate(user._id, { role }, { new: true });
+    return result;
+});
 //Get All Product
 const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_model_1.User.find().select('-__v');
@@ -93,4 +112,6 @@ exports.authServices = {
     createUser,
     getMeFromDB,
     getAllUsers,
+    deleteUserFromDB,
+    userRoleUpdate,
 };
