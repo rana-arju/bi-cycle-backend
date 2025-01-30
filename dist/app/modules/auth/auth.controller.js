@@ -90,7 +90,7 @@ const roleUpdateByAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: 'Role updated succesful',
+        message: 'Role updated succesfully',
         data: result,
     });
 }));
@@ -101,7 +101,17 @@ const statusUpdateByAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(vo
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: 'Status updated succesful',
+        message: 'Status updated succesfully',
+        data: result,
+    });
+}));
+const profileUpdate = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.user;
+    const result = yield auth_service_1.authServices.profileUpdate(userId, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Profile updated succesfully',
         data: result,
     });
 }));
@@ -109,6 +119,7 @@ exports.authController = {
     getMe,
     loginUser,
     getAllUsers,
+    profileUpdate,
     deleteByAdmin,
     registrationUser,
     roleUpdateByAdmin,

@@ -113,6 +113,14 @@ const userStatusUpdate = (id, status) => __awaiter(void 0, void 0, void 0, funct
     const result = yield auth_model_1.User.findByIdAndUpdate(user._id, { status }, { new: true });
     return result;
 });
+const profileUpdate = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield auth_model_1.User.findById(id);
+    if (!user) {
+        throw new AppError_1.default(404, 'User not found!');
+    }
+    const result = yield auth_model_1.User.findByIdAndUpdate(user._id, Object.assign({}, payload), { new: true });
+    return result;
+});
 //Get All Product
 const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_model_1.User.find().select('-__v');
@@ -126,4 +134,5 @@ exports.authServices = {
     deleteUserFromDB,
     userRoleUpdate,
     userStatusUpdate,
+    profileUpdate,
 };

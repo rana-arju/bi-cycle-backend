@@ -15,7 +15,8 @@ router.post('/registration', (0, validationRequest_1.default)(auth_validation_1.
 router.post('/login', (0, validationRequest_1.default)(auth_validation_1.authValidation.loginSchemaValidation), auth_controller_1.authController.loginUser);
 router.get('/me', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin, auth_interface_1.USER_ROLE.user), auth_controller_1.authController.getMe);
 router.get('/users', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.getAllUsers);
+router.patch('/profile', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin, auth_interface_1.USER_ROLE.user), auth_controller_1.authController.profileUpdate);
 router.delete('/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.deleteByAdmin);
-router.put('/role/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.roleUpdateByAdmin);
-router.put('/status/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.statusUpdateByAdmin);
+router.patch('/role/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.roleUpdateByAdmin);
+router.patch('/status/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.statusUpdateByAdmin);
 exports.authRoutes = router;

@@ -88,7 +88,7 @@ const roleUpdateByAdmin = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Role updated succesful',
+    message: 'Role updated succesfully',
     data: result,
   });
 });
@@ -101,7 +101,20 @@ const statusUpdateByAdmin = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Status updated succesful',
+    message: 'Status updated succesfully',
+    data: result,
+  });
+});
+const profileUpdate = catchAsync(async (req, res) => {
+  const { userId } = req.user as JwtPayload;
+  
+
+  const result = await authServices.profileUpdate(userId, req.body);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Profile updated succesfully',
     data: result,
   });
 });
@@ -109,6 +122,7 @@ export const authController = {
   getMe,
   loginUser,
   getAllUsers,
+  profileUpdate,
   deleteByAdmin,
   registrationUser,
   roleUpdateByAdmin,

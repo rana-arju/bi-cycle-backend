@@ -139,6 +139,20 @@ const userStatusUpdate = async (id: string, status: string) => {
   );
   return result;
 };
+const profileUpdate = async (id: string, payload: IUser) => {
+  const user = await User.findById(id);
+  if (!user) {
+    throw new AppError(404, 'User not found!');
+  }
+
+  const result = await User.findByIdAndUpdate(
+    user._id,
+    { ...payload },
+    { new: true },
+  );
+  
+  return result;
+};
 //Get All Product
 const getAllUsers = async () => {
   const result = await User.find().select('-__v');
@@ -152,4 +166,5 @@ export const authServices = {
   deleteUserFromDB,
   userRoleUpdate,
   userStatusUpdate,
+  profileUpdate,
 };

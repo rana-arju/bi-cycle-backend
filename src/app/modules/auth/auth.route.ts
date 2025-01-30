@@ -19,17 +19,21 @@ router.post(
 );
 router.get('/me', auth(USER_ROLE.admin, USER_ROLE.user), authController.getMe);
 router.get('/users', auth(USER_ROLE.admin), authController.getAllUsers);
+router.patch(
+  '/profile',
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  authController.profileUpdate,
+);
 router.delete('/:id', auth(USER_ROLE.admin), authController.deleteByAdmin);
-router.put(
+router.patch(
   '/role/:id',
   auth(USER_ROLE.admin),
   authController.roleUpdateByAdmin,
 );
-router.put(
+router.patch(
   '/status/:id',
   auth(USER_ROLE.admin),
   authController.statusUpdateByAdmin,
 );
-
 
 export const authRoutes = router;
