@@ -80,10 +80,37 @@ const deleteByAdmin = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const roleUpdateByAdmin = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { role } = req.body;
+  const result = await authServices.userRoleUpdate(id, role);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Role updated succesful',
+    data: result,
+  });
+});
+const statusUpdateByAdmin = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const result = await authServices.userStatusUpdate(id, status);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Status updated succesful',
+    data: result,
+  });
+});
 export const authController = {
-  loginUser,
-  registrationUser,
   getMe,
+  loginUser,
   getAllUsers,
   deleteByAdmin,
+  registrationUser,
+  roleUpdateByAdmin,
+  statusUpdateByAdmin,
 };

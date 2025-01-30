@@ -102,6 +102,17 @@ const userRoleUpdate = (id, role) => __awaiter(void 0, void 0, void 0, function*
     const result = yield auth_model_1.User.findByIdAndUpdate(user._id, { role }, { new: true });
     return result;
 });
+const userStatusUpdate = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield auth_model_1.User.findById(id);
+    if (!user) {
+        throw new AppError_1.default(404, 'User not found!');
+    }
+    if (user.status === status) {
+        throw new AppError_1.default(400, `This user already ${user.status}`);
+    }
+    const result = yield auth_model_1.User.findByIdAndUpdate(user._id, { status }, { new: true });
+    return result;
+});
 //Get All Product
 const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_model_1.User.find().select('-__v');
@@ -114,4 +125,5 @@ exports.authServices = {
     getAllUsers,
     deleteUserFromDB,
     userRoleUpdate,
+    userStatusUpdate,
 };

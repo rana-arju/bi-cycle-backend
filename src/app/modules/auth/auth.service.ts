@@ -124,6 +124,21 @@ const userRoleUpdate = async (id: string, role: string) => {
   );
   return result;
 };
+const userStatusUpdate = async (id: string, status: string) => {
+  const user = await User.findById(id);
+  if (!user) {
+    throw new AppError(404, 'User not found!');
+  }
+  if (user.status === status) {
+    throw new AppError(400, `This user already ${user.status}`);
+  }
+  const result = await User.findByIdAndUpdate(
+    user._id,
+    { status },
+    { new: true },
+  );
+  return result;
+};
 //Get All Product
 const getAllUsers = async () => {
   const result = await User.find().select('-__v');
@@ -136,4 +151,5 @@ export const authServices = {
   getAllUsers,
   deleteUserFromDB,
   userRoleUpdate,
+  userStatusUpdate,
 };
