@@ -106,7 +106,9 @@ const getMyOrderService = (userId) => __awaiter(void 0, void 0, void 0, function
     if (!user) {
         throw new AppError_1.default(404, 'User not found!');
     }
-    const result = yield orders_model_1.Order.find({ user: user._id }).sort({ createdAt: -1 }).populate('user')
+    const result = yield orders_model_1.Order.find({ user: user._id })
+        .sort({ createdAt: -1 })
+        .populate('user')
         .populate('products.product');
     return result;
 });
@@ -120,6 +122,13 @@ const getSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function
 });
 //delete Product
 const deleteSingleOrderService = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const orderExist = yield orders_model_1.Order.findById(id);
+    if (!orderExist) {
+        throw new AppError_1.default(404, `Order with ID ${id} not found.`);
+    }
+    if ((orderExist === null || orderExist === void 0 ? void 0 : orderExist.status) === 'Paid') {
+        throw new AppError_1.default(400, `This order can not delete!`);
+    }
     const result = yield orders_model_1.Order.findByIdAndDelete(id);
     if (!result) {
         throw new AppError_1.default(404, `Order with ID ${id} not found.`);
@@ -131,6 +140,19 @@ const updateSingleOrderService = (id, payload) => __awaiter(void 0, void 0, void
     const result = yield orders_model_1.Order.findByIdAndUpdate(id, payload, {
         new: true,
         runValidators: true,
+    }).select('-__v');
+    if (!result) {
+        throw new AppError_1.default(404, `Order with ID ${id} not found.`);
+    }
+    return result;
+});
+const updateStatusService = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const orderExist = yield orders_model_1.Order.findById(id);
+    if (!orderExist) {
+        throw new AppError_1.default(404, 'This order not found!');
+    }
+    const result = yield orders_model_1.Order.findByIdAndUpdate(orderExist._id, payload, {
+        new: true,
     }).select('-__v');
     if (!result) {
         throw new AppError_1.default(404, `Order with ID ${id} not found.`);
@@ -169,4 +191,5 @@ exports.orderService = {
     getAllOrderService,
     verifyPayment,
     getMyOrderService,
+    updateStatusService,
 };

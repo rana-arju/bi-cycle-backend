@@ -144,7 +144,7 @@ const passwordChnageIntoDB = (user, passwordData) => __awaiter(void 0, void 0, v
     //hash new password
     const newHashPassword = yield bcrypt_1.default.hash(passwordData.newPassword, Number(config_1.default.salt_rounds));
     yield auth_model_1.User.findOneAndUpdate({
-        id: user === null || user === void 0 ? void 0 : user.userId,
+        _id: user === null || user === void 0 ? void 0 : user.userId,
         role: user === null || user === void 0 ? void 0 : user.role,
     }, {
         password: newHashPassword,

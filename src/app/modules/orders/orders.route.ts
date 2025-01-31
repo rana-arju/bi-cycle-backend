@@ -17,9 +17,26 @@ orderRouter.get(
   auth(USER_ROLE.user, USER_ROLE.admin),
   orderController.verifyPayment,
 );
-orderRouter.get('/:productId', orderController.getSingleOrder);
-orderRouter.put('/:productId', orderController.updateOrder);
-orderRouter.delete('/:productId', orderController.deleteOrder);
+orderRouter.patch(
+  '/status/:productId',
+  auth(USER_ROLE.admin),
+  orderController.orderStatusUpdate,
+);
+orderRouter.get(
+  '/:productId',
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  orderController.getSingleOrder,
+);
+orderRouter.put(
+  '/:productId',
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  orderController.updateOrder,
+);
+orderRouter.delete(
+  '/:productId',
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  orderController.deleteOrder,
+);
 orderRouter.post(
   '/',
   auth(USER_ROLE.user, USER_ROLE.admin),

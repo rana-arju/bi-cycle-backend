@@ -64,20 +64,27 @@ const getSingleOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 // Single Order delete controller
-const deleteOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { productId } = req.params;
-        yield orders_service_1.orderService.deleteSingleOrderService(productId);
-        res.json({
-            status: true,
-            message: 'Order deleted successfully',
-            data: {},
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
+const deleteOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { productId } = req.params;
+    yield orders_service_1.orderService.deleteSingleOrderService(productId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        message: 'Order deleted successfully',
+        success: true,
+        data: {},
+    });
+}));
+// Single Order status controller
+const orderStatusUpdate = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { productId } = req.params;
+    const result = yield orders_service_1.orderService.updateStatusService(productId, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        message: 'Status update successfully',
+        success: true,
+        data: result,
+    });
+}));
 // Single order update controller
 const updateOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -126,4 +133,5 @@ exports.orderController = {
     totalRevenue,
     verifyPayment,
     getMyOrder,
+    orderStatusUpdate,
 };

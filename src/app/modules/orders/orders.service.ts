@@ -122,7 +122,9 @@ const getMyOrderService = async (userId: JwtPayload) => {
     throw new AppError(404, 'User not found!');
   }
 
-  const result = await Order.find({ user: user._id }).sort({ createdAt: -1 }).populate('user')
+  const result = await Order.find({ user: user._id })
+    .sort({ createdAt: -1 })
+    .populate('user')
     .populate('products.product');
   return result;
 };
@@ -137,7 +139,16 @@ const getSingleOrderService = async (id: string) => {
 };
 //delete Product
 const deleteSingleOrderService = async (id: string) => {
+  const orderExist = await Order.findById(id);
+  if (!orderExist) {
+    throw new AppError(404, `Order with ID ${id} not found.`);
+  }
+  if (orderExist?.status === 'Paid') {
+    throw new AppError(400, `This order can not delete!`);
+  }
+
   const result = await Order.findByIdAndDelete(id);
+
   if (!result) {
     throw new AppError(404, `Order with ID ${id} not found.`);
   }
@@ -151,6 +162,19 @@ const updateSingleOrderService = async (
   const result = await Order.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
+  }).select('-__v');
+  if (!result) {
+    throw new AppError(404, `Order with ID ${id} not found.`);
+  }
+  return result;
+};
+const updateStatusService = async (id: string, payload: { status: string }) => {
+  const orderExist = await Order.findById(id);
+  if (!orderExist) {
+    throw new AppError(404, 'This order not found!');
+  }
+  const result = await Order.findByIdAndUpdate(orderExist._id, payload, {
+    new: true,
   }).select('-__v');
   if (!result) {
     throw new AppError(404, `Order with ID ${id} not found.`);
@@ -197,4 +221,5 @@ export const orderService = {
   getAllOrderService,
   verifyPayment,
   getMyOrderService,
+  updateStatusService,
 };

@@ -31,9 +31,8 @@ const getAllOrder = catchAsync(async (req, res) => {
 });
 // All Order get controller
 const getMyOrder = catchAsync(async (req, res) => {
-  const {userId} = req.user as JwtPayload;
+  const { userId } = req.user as JwtPayload;
   const result = await orderService.getMyOrderService(userId);
-  
 
   sendResponse(res, {
     statusCode: 200,
@@ -65,21 +64,31 @@ const getSingleOrder = async (
 };
 
 // Single Order delete controller
-const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { productId } = req.params;
+const deleteOrder = catchAsync(async (req, res) => {
+  const { productId } = req.params;
 
-    await orderService.deleteSingleOrderService(productId);
+  await orderService.deleteSingleOrderService(productId);
 
-    res.json({
-      status: true,
-      message: 'Order deleted successfully',
-      data: {},
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  sendResponse(res, {
+    statusCode: 200,
+    message: 'Order deleted successfully',
+    success: true,
+    data: {},
+  });
+});
+// Single Order status controller
+const orderStatusUpdate = catchAsync(async (req, res) => {
+  const { productId } = req.params;
+
+  const result =await orderService.updateStatusService(productId, req.body);
+
+  sendResponse(res, {
+    statusCode: 200,
+    message: 'Status update successfully',
+    success: true,
+    data: result,
+  });
+});
 
 // Single order update controller
 const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
@@ -140,4 +149,5 @@ export const orderController = {
   totalRevenue,
   verifyPayment,
   getMyOrder,
+  orderStatusUpdate,
 };
