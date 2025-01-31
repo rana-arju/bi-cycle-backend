@@ -17,6 +17,7 @@ const config_1 = __importDefault(require("../../config"));
 const AppError_1 = __importDefault(require("../../error/AppError"));
 const auth_model_1 = require("./auth.model");
 const auth_utils_1 = require("./auth.utils");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // user exists or not found
     //const user = await User.findOne({ id: payload?.id }).select('+password');
@@ -121,6 +122,35 @@ const profileUpdate = (id, payload) => __awaiter(void 0, void 0, void 0, functio
     const result = yield auth_model_1.User.findByIdAndUpdate(user._id, Object.assign({}, payload), { new: true });
     return result;
 });
+const passwordChnageIntoDB = (user, passwordData) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUser = yield auth_model_1.User.findById(user === null || user === void 0 ? void 0 : user.userId).select('+password');
+    if (!isUser) {
+        throw new AppError_1.default(404, 'User not found');
+    }
+    //checking is user already deleted
+    const isDeleted = isUser === null || isUser === void 0 ? void 0 : isUser.isDeleted;
+    if (isDeleted) {
+        throw new AppError_1.default(403, 'User already deleted');
+    }
+    //checking is user blocked or not allowed
+    const isBlocked = (isUser === null || isUser === void 0 ? void 0 : isUser.status) === 'blocked';
+    if (isBlocked) {
+        throw new AppError_1.default(403, 'User already blocked');
+    }
+    // checking password is correct
+    if (!(yield auth_model_1.User.isPasswordMatched(passwordData === null || passwordData === void 0 ? void 0 : passwordData.oldPassword, isUser === null || isUser === void 0 ? void 0 : isUser.password))) {
+        throw new AppError_1.default(403, 'Password mismatch');
+    }
+    //hash new password
+    const newHashPassword = yield bcrypt_1.default.hash(passwordData.newPassword, Number(config_1.default.salt_rounds));
+    yield auth_model_1.User.findOneAndUpdate({
+        id: user === null || user === void 0 ? void 0 : user.userId,
+        role: user === null || user === void 0 ? void 0 : user.role,
+    }, {
+        password: newHashPassword,
+    });
+    return null;
+});
 //Get All Product
 const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_model_1.User.find().select('-__v');
@@ -135,4 +165,5 @@ exports.authServices = {
     userRoleUpdate,
     userStatusUpdate,
     profileUpdate,
+    passwordChnageIntoDB,
 };

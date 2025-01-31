@@ -118,10 +118,29 @@ const profileUpdate = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const changePassword = catchAsync(async (req, res) => {
+  // will call service func to send this data
+  const { ...passwordData } = req.body;
+  const userData = req?.user;
+  const result = await authServices.passwordChnageIntoDB(
+    userData as JwtPayload,
+    passwordData,
+  );
+
+  // send response
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Password updated successful',
+    data: result,
+  });
+});
 export const authController = {
   getMe,
   loginUser,
   getAllUsers,
+  changePassword,
   profileUpdate,
   deleteByAdmin,
   registrationUser,

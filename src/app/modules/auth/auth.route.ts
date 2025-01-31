@@ -24,6 +24,12 @@ router.patch(
   auth(USER_ROLE.admin, USER_ROLE.user),
   authController.profileUpdate,
 );
+router.post(
+  '/change-password',
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  validationRequest(authValidation.changePasswordSchemaValidation),
+  authController.changePassword,
+);
 router.delete('/:id', auth(USER_ROLE.admin), authController.deleteByAdmin);
 router.patch(
   '/role/:id',

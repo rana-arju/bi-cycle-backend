@@ -16,6 +16,7 @@ router.post('/login', (0, validationRequest_1.default)(auth_validation_1.authVal
 router.get('/me', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin, auth_interface_1.USER_ROLE.user), auth_controller_1.authController.getMe);
 router.get('/users', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.getAllUsers);
 router.patch('/profile', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin, auth_interface_1.USER_ROLE.user), auth_controller_1.authController.profileUpdate);
+router.post('/change-password', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin, auth_interface_1.USER_ROLE.user), (0, validationRequest_1.default)(auth_validation_1.authValidation.changePasswordSchemaValidation), auth_controller_1.authController.changePassword);
 router.delete('/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.deleteByAdmin);
 router.patch('/role/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.roleUpdateByAdmin);
 router.patch('/status/:id', (0, auth_1.default)(auth_interface_1.USER_ROLE.admin), auth_controller_1.authController.statusUpdateByAdmin);
