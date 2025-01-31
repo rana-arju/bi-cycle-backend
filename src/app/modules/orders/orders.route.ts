@@ -8,13 +8,13 @@ const orderRouter = Router();
 orderRouter.get('/revenue', orderController.totalRevenue);
 orderRouter.get(
   '/myOrder',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  auth(USER_ROLE.customer, USER_ROLE.admin),
   orderController.getMyOrder,
 );
 
 orderRouter.get(
   '/verify',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  auth(USER_ROLE.customer, USER_ROLE.admin),
   orderController.verifyPayment,
 );
 orderRouter.patch(
@@ -24,22 +24,22 @@ orderRouter.patch(
 );
 orderRouter.get(
   '/:productId',
-  auth(USER_ROLE.admin, USER_ROLE.user),
+  auth(USER_ROLE.admin, USER_ROLE.customer),
   orderController.getSingleOrder,
 );
 orderRouter.put(
   '/:productId',
-  auth(USER_ROLE.admin, USER_ROLE.user),
+  auth(USER_ROLE.admin, USER_ROLE.customer),
   orderController.updateOrder,
 );
 orderRouter.delete(
   '/:productId',
-  auth(USER_ROLE.admin, USER_ROLE.user),
+  auth(USER_ROLE.admin, USER_ROLE.customer),
   orderController.deleteOrder,
 );
 orderRouter.post(
   '/',
-  auth(USER_ROLE.user, USER_ROLE.admin),
+  auth(USER_ROLE.customer, USER_ROLE.admin),
   orderController.placeOrder,
 );
 orderRouter.get('/', auth(USER_ROLE.admin), orderController.getAllOrder);

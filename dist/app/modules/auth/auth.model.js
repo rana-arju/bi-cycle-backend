@@ -50,8 +50,8 @@ const userSchema = new mongoose_1.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'admin'],
-        default: 'user',
+        enum: ['customer', 'admin'],
+        default: 'customer',
     },
     isDeleted: { type: Boolean, default: false },
 }, { timestamps: true });

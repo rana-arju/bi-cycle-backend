@@ -17,16 +17,16 @@ router.post(
   validationRequest(authValidation.loginSchemaValidation),
   authController.loginUser,
 );
-router.get('/me', auth(USER_ROLE.admin, USER_ROLE.user), authController.getMe);
+router.get('/me', auth(USER_ROLE.admin, USER_ROLE.customer), authController.getMe);
 router.get('/users', auth(USER_ROLE.admin), authController.getAllUsers);
 router.patch(
   '/profile',
-  auth(USER_ROLE.admin, USER_ROLE.user),
+  auth(USER_ROLE.admin, USER_ROLE.customer),
   authController.profileUpdate,
 );
 router.post(
   '/change-password',
-  auth(USER_ROLE.admin, USER_ROLE.user),
+  auth(USER_ROLE.admin, USER_ROLE.customer),
   validationRequest(authValidation.changePasswordSchemaValidation),
   authController.changePassword,
 );

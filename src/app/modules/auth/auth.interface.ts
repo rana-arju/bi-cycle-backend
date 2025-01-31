@@ -8,7 +8,7 @@ export interface IUser {
   address: string;
   city: string;
   phone: string;
-  role: 'user' | 'admin';
+  role: 'customer' | 'admin';
   status: 'in-progress' | 'blocked';
   isDeleted: boolean;
 }
@@ -19,7 +19,7 @@ export interface UserModel extends Model<IUser> {
   ): Promise<boolean>;
 }
 export const USER_ROLE = {
-  user: 'user',
-  admin: 'admin'
+  customer: 'customer',
+  admin: 'admin',
 } as const;
 export type IUserRole = keyof typeof USER_ROLE;

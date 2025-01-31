@@ -24,7 +24,7 @@ const userSchema = new Schema<IUser, UserModel>(
     },
     address: {
       type: String,
-    },  
+    },
     city: {
       type: String,
     },
@@ -39,8 +39,8 @@ const userSchema = new Schema<IUser, UserModel>(
     },
     role: {
       type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
+      enum: ['customer', 'admin'],
+      default: 'customer',
     },
     isDeleted: { type: Boolean, default: false },
   },

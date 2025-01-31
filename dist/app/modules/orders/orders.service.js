@@ -28,6 +28,7 @@ const addOrderService = (userId, payload, client_ip) => __awaiter(void 0, void 0
         throw new AppError_1.default(404, 'User not found');
     }
     const { address, city, phone } = payload.userInfo;
+    //user update
     const updatedUser = yield auth_model_1.User.findByIdAndUpdate(user._id, {
         address,
         city,
@@ -41,11 +42,16 @@ const addOrderService = (userId, payload, client_ip) => __awaiter(void 0, void 0
             if ((item === null || item === void 0 ? void 0 : item.quantity) > (product === null || product === void 0 ? void 0 : product.quantity)) {
                 throw new Error(`Insufficient stock for product "${product.name}". Only ${product.quantity} items left.`);
             }
+            const updateQuantity = (product === null || product === void 0 ? void 0 : product.quantity) - (item === null || item === void 0 ? void 0 : item.quantity);
+            yield products_model_1.Product.findByIdAndUpdate(product === null || product === void 0 ? void 0 : product._id, {
+                quantity: updateQuantity,
+            });
             const subtotal = product ? (product.price || 0) * item.quantity : 0;
             totalPrice += subtotal;
             return item;
         }
     })));
+    //create order
     let order = yield orders_model_1.Order.create({
         user: user._id,
         products: productDetails,

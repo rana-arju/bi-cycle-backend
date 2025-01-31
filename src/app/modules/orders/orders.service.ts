@@ -26,6 +26,8 @@ const addOrderService = async (
     throw new AppError(404, 'User not found');
   }
   const { address, city, phone } = payload.userInfo;
+
+  //user update
   const updatedUser = await User.findByIdAndUpdate(
     user._id,
     {
@@ -48,12 +50,18 @@ const addOrderService = async (
             `Insufficient stock for product "${product.name}". Only ${product.quantity} items left.`,
           );
         }
+        const updateQuantity = product?.quantity - item?.quantity;
+        await Product.findByIdAndUpdate(product?._id, {
+          quantity: updateQuantity,
+        });
         const subtotal = product ? (product.price || 0) * item.quantity : 0;
         totalPrice += subtotal;
         return item;
       }
     }),
   );
+
+  //create order
   let order = await Order.create({
     user: user._id,
     products: productDetails,
