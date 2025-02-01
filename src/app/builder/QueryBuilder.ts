@@ -6,7 +6,7 @@ class QueryBuilder<T> {
   constructor(modelQuery: Query<T[], T>, query: Record<string, unknown>) {
     this.modelQuery = modelQuery;
     this.query = query;
-  } 
+  }
   search(searchableFields: string[]) {
     if (this?.query?.searchTerm) {
       const searchFilter = {
@@ -50,15 +50,17 @@ class QueryBuilder<T> {
     if (queryObj.minPrice || queryObj.maxPrice) {
       queryObj.price = {} as Record<string, number>;
       if (queryObj.minPrice) {
-        
-    (queryObj.price as Record<string, number>).$gte = Number(queryObj.minPrice);
+        (queryObj.price as Record<string, number>).$gte = Number(
+          queryObj.minPrice,
+        );
         delete queryObj.minPrice;
       }
       if (queryObj.maxPrice) {
-    (queryObj.price as Record<string, number>).$lte = Number(queryObj.maxPrice);
+        (queryObj.price as Record<string, number>).$lte = Number(
+          queryObj.maxPrice,
+        );
         delete queryObj.maxPrice;
       }
-     
     }
 
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);

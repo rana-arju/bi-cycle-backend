@@ -31,9 +31,32 @@ export type BicycleModel =
   | 'RecuRide'
   | 'TandemExpress'
   | 'TrackStar';
+
+export type bicycleBrands =
+  | 'Trek'
+  | 'Giant'
+  | 'Specialized'
+  | 'Cannondale'
+  | 'Scott'
+  | 'Santa Cruz'
+  | 'Bianchi'
+  | 'Merida'
+  | 'Cervélo'
+  | 'Orbea'
+  | 'Fuji'
+  | 'Cube'
+  | 'Marin'
+  | 'Kona'
+  | 'Raleigh'
+  | 'GT Bicycles'
+  | 'Polygon'
+  | 'Norco'
+  | 'BMC'
+  | 'Yeti Cycles';
+
 export type IProduct = {
   name: string;
-  brand: string;
+  brand: bicycleBrands;
   price: number;
   model: BicycleModel;
   category: BicycleCategory;

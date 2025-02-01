@@ -80,7 +80,7 @@ const deleteOrder = catchAsync(async (req, res) => {
 const orderStatusUpdate = catchAsync(async (req, res) => {
   const { productId } = req.params;
 
-  const result =await orderService.updateStatusService(productId, req.body);
+  const result = await orderService.updateStatusService(productId, req.body);
 
   sendResponse(res, {
     statusCode: 200,

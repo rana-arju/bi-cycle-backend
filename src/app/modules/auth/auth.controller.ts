@@ -107,7 +107,6 @@ const statusUpdateByAdmin = catchAsync(async (req, res) => {
 });
 const profileUpdate = catchAsync(async (req, res) => {
   const { userId } = req.user as JwtPayload;
-  
 
   const result = await authServices.profileUpdate(userId, req.body);
 

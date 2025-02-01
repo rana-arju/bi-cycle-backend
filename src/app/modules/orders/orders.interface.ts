@@ -1,4 +1,4 @@
-import { Document, Types } from "mongoose";
+import { Document, Types } from 'mongoose';
 
 export interface IOrder extends Document {
   user: Types.ObjectId;
@@ -7,7 +7,7 @@ export interface IOrder extends Document {
     quantity: number;
   }[];
   totalPrice: number;
-  status: "Pending" | "Paid" | "Shipped" | "Completed" | "Cancelled";
+  status: 'Pending' | 'Paid' | 'Shipped' | 'Completed' | 'Cancelled';
   transaction: {
     id: string;
     transactionStatus: string;

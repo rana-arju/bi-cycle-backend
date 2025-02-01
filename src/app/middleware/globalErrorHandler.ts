@@ -11,7 +11,6 @@ import handleCastError from '../error/handleCastError';
 import handleDuplicateError from '../error/handleDuplicateError';
 import AppError from '../error/AppError';
 
-
 export const globalErrorHandler: ErrorRequestHandler = (
   err,
   req,

@@ -164,7 +164,6 @@ const passwordChnageIntoDB = async (
   if (!isUser) {
     throw new AppError(404, 'User not found');
   }
-  
 
   //checking is user already deleted
   const isDeleted = isUser?.isDeleted;
@@ -177,7 +176,6 @@ const passwordChnageIntoDB = async (
     throw new AppError(403, 'User already blocked');
   }
   // checking password is correct
-
 
   if (
     !(await User.isPasswordMatched(
@@ -193,7 +191,7 @@ const passwordChnageIntoDB = async (
     passwordData.newPassword,
     Number(config.salt_rounds),
   );
-  
+
   await User.findOneAndUpdate(
     {
       _id: user?.userId,

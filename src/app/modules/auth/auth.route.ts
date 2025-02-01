@@ -17,7 +17,11 @@ router.post(
   validationRequest(authValidation.loginSchemaValidation),
   authController.loginUser,
 );
-router.get('/me', auth(USER_ROLE.admin, USER_ROLE.customer), authController.getMe);
+router.get(
+  '/me',
+  auth(USER_ROLE.admin, USER_ROLE.customer),
+  authController.getMe,
+);
 router.get('/users', auth(USER_ROLE.admin), authController.getAllUsers);
 router.patch(
   '/profile',

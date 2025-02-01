@@ -56,7 +56,7 @@ const getSingleProduct = async (
 const deleteProduct = catchAsync(async (req, res) => {
   const { productId } = req.params;
 
- const result = await productService.deleteSingleProductService(productId);
+  const result = await productService.deleteSingleProductService(productId);
   sendResponse(res, {
     statusCode: 200,
     message: 'Bicycle deleted successfully',
