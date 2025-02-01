@@ -6,7 +6,7 @@ class QueryBuilder<T> {
   constructor(modelQuery: Query<T[], T>, query: Record<string, unknown>) {
     this.modelQuery = modelQuery;
     this.query = query;
-  }
+  } 
   search(searchableFields: string[]) {
     if (this?.query?.searchTerm) {
       const searchFilter = {
@@ -21,7 +21,7 @@ class QueryBuilder<T> {
     }
     return this;
   }
-
+  /*
   filter() {
     const queryObj = { ...this.query }; //copy of "query"
     const excludeField = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
@@ -29,6 +29,42 @@ class QueryBuilder<T> {
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
     return this;
   }
+   */
+
+  filter() {
+    const queryObj = { ...this.query };
+    const excludeField = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+    excludeField.forEach((el) => delete queryObj[el]);
+
+    // Handle availability filter
+    if (queryObj.availability) {
+      if (queryObj.availability === 'in-stock') {
+        queryObj.quantity = { $gt: 0 };
+      } else if (queryObj.availability === 'out-of-stock') {
+        queryObj.quantity = { $lte: 0 };
+      }
+      delete queryObj.availability;
+    }
+
+    // Handle price range filter
+    if (queryObj.minPrice || queryObj.maxPrice) {
+      queryObj.price = {} as Record<string, number>;
+      if (queryObj.minPrice) {
+        
+    (queryObj.price as Record<string, number>).$gte = Number(queryObj.minPrice);
+        delete queryObj.minPrice;
+      }
+      if (queryObj.maxPrice) {
+    (queryObj.price as Record<string, number>).$lte = Number(queryObj.maxPrice);
+        delete queryObj.maxPrice;
+      }
+     
+    }
+
+    this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
+    return this;
+  }
+
   sort() {
     const sort =
       (this?.query?.sort as string)?.split(',')?.join(' ') || '-createdAt';

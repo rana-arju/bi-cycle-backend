@@ -29,10 +29,41 @@ class QueryBuilder {
         }
         return this;
     }
+    /*
     filter() {
-        const queryObj = Object.assign({}, this.query); //copy of "query"
+      const queryObj = { ...this.query }; //copy of "query"
+      const excludeField = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+      excludeField.forEach((el) => delete queryObj[el]);
+      this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
+      return this;
+    }
+     */
+    filter() {
+        const queryObj = Object.assign({}, this.query);
         const excludeField = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
         excludeField.forEach((el) => delete queryObj[el]);
+        // Handle availability filter
+        if (queryObj.availability) {
+            if (queryObj.availability === 'in-stock') {
+                queryObj.quantity = { $gt: 0 };
+            }
+            else if (queryObj.availability === 'out-of-stock') {
+                queryObj.quantity = { $lte: 0 };
+            }
+            delete queryObj.availability;
+        }
+        // Handle price range filter
+        if (queryObj.minPrice || queryObj.maxPrice) {
+            queryObj.price = {};
+            if (queryObj.minPrice) {
+                queryObj.price.$gte = Number(queryObj.minPrice);
+                delete queryObj.minPrice;
+            }
+            if (queryObj.maxPrice) {
+                queryObj.price.$lte = Number(queryObj.maxPrice);
+                delete queryObj.maxPrice;
+            }
+        }
         this.modelQuery = this.modelQuery.find(queryObj);
         return this;
     }
