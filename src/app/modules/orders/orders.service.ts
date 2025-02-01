@@ -6,6 +6,8 @@ import { orderUtils } from './order.utils';
 import { IOrder } from './orders.interface';
 import { Order } from './orders.model';
 import { User } from '../auth/auth.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { OrderSearchableField } from './order.constant';
 
 //Place order
 
@@ -113,14 +115,20 @@ const calculateRevenueService = async () => {
 };
 
 //Get All Product
-const getAllOrderService = async () => {
-  // console.log(searchTerm);
+const getAllOrderService = async (searchTerm: Record<string, unknown>) => {
+  const allOrderQuery = new QueryBuilder(
+    Order.find().populate('user').populate('products.product'),
+    searchTerm,
+  )
+    .search(OrderSearchableField)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const result = await allOrderQuery.modelQuery;
+  const meta = await allOrderQuery.countTotal();
 
-  const result = await Order.find()
-    .sort({ createdAt: -1 })
-    .populate('user')
-    .populate('products.product');
-  return result;
+  return { result, meta };
 };
 
 //Get All Product

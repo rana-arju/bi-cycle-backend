@@ -18,6 +18,8 @@ const products_model_1 = require("../products/products.model");
 const order_utils_1 = require("./order.utils");
 const orders_model_1 = require("./orders.model");
 const auth_model_1 = require("../auth/auth.model");
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
+const order_constant_1 = require("./order.constant");
 //Place order
 const addOrderService = (userId, payload, client_ip) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -98,13 +100,16 @@ const calculateRevenueService = () => __awaiter(void 0, void 0, void 0, function
     return result;
 });
 //Get All Product
-const getAllOrderService = () => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log(searchTerm);
-    const result = yield orders_model_1.Order.find()
-        .sort({ createdAt: -1 })
-        .populate('user')
-        .populate('products.product');
-    return result;
+const getAllOrderService = (searchTerm) => __awaiter(void 0, void 0, void 0, function* () {
+    const allOrderQuery = new QueryBuilder_1.default(orders_model_1.Order.find().populate('user').populate('products.product'), searchTerm)
+        .search(order_constant_1.OrderSearchableField)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const result = yield allOrderQuery.modelQuery;
+    const meta = yield allOrderQuery.countTotal();
+    return { result, meta };
 });
 //Get All Product
 const getMyOrderService = (userId) => __awaiter(void 0, void 0, void 0, function* () {

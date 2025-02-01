@@ -29,12 +29,13 @@ const placeOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 }));
 // All Order get controller
 const getAllOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield orders_service_1.orderService.getAllOrderService();
+    const result = yield orders_service_1.orderService.getAllOrderService(req.query);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         message: 'Order get successfully',
         success: true,
-        data: result,
+        data: result === null || result === void 0 ? void 0 : result.result,
+        meta: result === null || result === void 0 ? void 0 : result.meta,
     });
 }));
 // All Order get controller

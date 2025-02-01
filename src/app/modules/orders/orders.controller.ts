@@ -20,13 +20,14 @@ const placeOrder = catchAsync(async (req, res) => {
 
 // All Order get controller
 const getAllOrder = catchAsync(async (req, res) => {
-  const result = await orderService.getAllOrderService();
+  const result = await orderService.getAllOrderService(req.query);
 
   sendResponse(res, {
     statusCode: 200,
     message: 'Order get successfully',
     success: true,
-    data: result,
+    data: result?.result,
+    meta: result?.meta,
   });
 });
 // All Order get controller
